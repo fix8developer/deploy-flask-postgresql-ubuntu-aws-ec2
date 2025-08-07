@@ -65,6 +65,7 @@
         * `$ sudo ufw allow 2200/tcp`
         * `$ sudo ufw allow 80/tcp`
         * `$ sudo ufw allow 123/udp`
+        * `$ sudo ufw allow 443/tcp`
     * Enable Firewall and make sure port 22 is disabled:
         * `sudo nano /etc/ssh/sshd_config`
             to open editor and change port number from **22** to **2200**, set **PermitRootLogin** to **no**.
@@ -72,7 +73,8 @@
         * `$ sudo ufw status`
         * `$ sudo ufw enable`
         * `$ sudo service ufw restart`
-        * **Note:** If using Amazon Lightsail, Amazon also applies a firewall, need to make sure the same ports are enabled in the Amazon console as well.
+
+            **Note:** If using Amazon EC2, Amazon also applies a firewall, need to make sure the same ports are enabled in the Amazon console as well.
 18. So we can access the server locally by downloading the SSH key pairs provided inside AWS account and then run:
     * `$ ssh ubuntu@<public-ip> -i .ssh/LightsailDefaultPrivateKey-eu-central-1.pem -p 2200`
 19. But now login as user **grader** locally run: :computer:
@@ -117,7 +119,7 @@
 
             **"from project"** phrase is actually the name of my main python file.
 24. We need to configure Apache to handle requests using the WSGI module. :pushpin:
-    * Creating new configuration file.
+    * Creating new configuration file for **HTTP**.
         * `$ sudo touch /etc/apache2/sites-available/catalog.conf`
     * Open the editor and add the following content.
         * `$ sudo nano /etc/apache2/sites-available/catalog.conf`
@@ -141,14 +143,59 @@
             </VirtualHost>
             ```
 
+    * Creating new configuration file **HTTPS**.
+        * `$ sudo touch /etc/apache2/sites-available/catalog-ssl.conf`
+    * Open the editor and add the following content.
+        * `$ sudo nano /etc/apache2/sites-available/catalog-ssl.conf`
+        * Content:
+
+            ```text
+            <IfModule mod_ssl.c>
+            <VirtualHost *:443>
+                ServerName <public-ip/localhost>
+                ServerAdmin fix8developer@gmail.com
+
+                WSGIScriptAlias / /var/www/catalog/project.wsgi
+
+                <Directory /var/www/catalog>
+                    Require all granted
+                    WSGIApplicationGroup %{GLOBAL}
+                    WSGIScriptReloading On
+                </Directory>
+
+                SSLEngine on
+                SSLCertificateFile /etc/ssl/certs/selfsigned.crt
+                SSLCertificateKeyFile /etc/ssl/private/selfsigned.key
+
+                ErrorLog ${APACHE_LOG_DIR}/catalog_ssl_error.log
+                CustomLog ${APACHE_LOG_DIR}/catalog_ssl_access.log combined
+            </VirtualHost>
+            </IfModule>
+            ```
+
+    * **Optional:** Redirect HTTP to HTTPS.
+        * `$ sudo nano /etc/apache2/sites-available/catalog.conf`
+        * Content:
+
+            ```text
+            <VirtualHost *:80>
+                ServerName <public-ip/localhost>
+                Redirect permanent / https://<public-ip/localhost>/
+            </VirtualHost>
+            ```
+
 25. Now, disable the default Apache site, enable your flask app. :white_check_mark: :negative_squared_cross_mark:
     * Disable the default configuration file:
         * `$ sudo a2dissite 000-default.conf`
     * Enable the **catalog.conf** (Our flask app configuration):
         * `$ sudo a2ensite catalog.conf`
+    * Enable the **catalog-ssl.conf** (Our flask app configuration):
+        * `$ sudo a2enmod ssl`
+        * `$ sudo a2ensite catalog-ssl.conf`
     * To active the new configuration we need to run:
         * `$ sudo service apache2 restart`
         * `$ sudo apache2ctl restart`
+        * `$ sudo systemctl reload apache2`
 26. If app was cloned from (**<https://github.com/FixEight/udacity-buid-an-item-catalog-application>**) then all the following (Line numbers: 27, 28, 29) modification are made already in the repository.
 
 27. Modify **app.secret_key** location Move **app.secret_key** so that it becomes available to the app in the new wsgi configuration.
