@@ -247,6 +247,7 @@ pip install passlib
 pip install requests
 pip install psycopg2
 ```
+
 ### Step 17: 🌀 Clone [Build-an-item-catalog-application](https://github.com/FixEight/udacity-build-an-item-catalog-application) repository
 
 ---
@@ -399,7 +400,8 @@ Content
     sudo service apache2 restart
     sudo apache2ctl restart
     sudo systemctl reload apache2
-```
+    ```
+
 ### Step 21: If app was cloned from (**[https://github.com/FixEight/udacity-build-an-item-catalog-application](https://github.com/FixEight/udacity-build-an-item-catalog-application)**) then all the following modification are required
 
 ---
