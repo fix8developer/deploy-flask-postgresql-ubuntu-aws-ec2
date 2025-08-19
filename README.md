@@ -1,6 +1,6 @@
 # Linux Server Configuration
 
-## Project Overview ☁️
+## ⚡ Project Overview
 
 This project provides a **complete guide and configuration scripts** for setting up a  **secure Linux server on AWS EC2** . It walks through every step required to transform a fresh EC2 instance into a production-ready environment capable of hosting web applications.
 
@@ -13,150 +13,254 @@ The configuration covers:
 
 This repository is ideal for **students, developers, and system administrators** who want a ready-made reference for deploying Flask or other Python web apps on a  **hardened Linux environment with AWS EC2** .
 
-## Setup the Project: 🔩 🔧
+## 🔧 Setup the Project
 
 1. [Create EC2 Account.](https://signin.aws.amazon.com/ "AWS EC2")
 2. Create EC2 instance.
 3. First check for Updates of the Packages then upgrade them.
 
-   * `$ sudo apt-get update`
-   * `$ sudo apt-get upgrade`
+   ```bash
+   sudo apt-get update
+   sudo apt-get upgrade
+   ```
+
 4. Install package **finger**. 📦
 
-   * `$ sudo apt-get install finger`
+   ```bash
+   sudo apt-get install finger
+   ```
+
 5. Restart the Server.
 
-   * `$ sudo reboot`
+   ```bash
+   sudo reboot
+   ```
+
 6. Create new User **grader** (I created password: **grader**).
 
-   * `$ sudo adduser grader`
+   ```bash
+   sudo adduser grader
+   ```
+
 7. Create file in given directory with name (grader).
 
-   * `$ sudo touch /etc/sudoers.d/grader`
+   ```bash
+   sudo touch /etc/sudoers.d/grader
+   ```
+
 8. Set **sudo** permissons for the new user (grader).
 
-   * `$ sudo nano /etc/sudoers.d/grader`
-     * Type: `$ grader ALL=(ALL) NOPASSWD:ALL`
-     * Type 'ctrl-o' to save.
-     * Type 'ctrl-x' to exit.
+   ```bash
+   sudo nano /etc/sudoers.d/grader
+   ```
+
+   * Type: `grader ALL=(ALL) NOPASSWD:ALL`
+   * `ctrl-o` to save.
+   * `ctrl-x` to exit.
 9. Now login to user **grader**.
 
-   * `$ sudo su grader`
-10. Setup ssh-key based ssh login.
+   ```bash
+   sudo su grader
+   ```
+
+10. Setup `ssh-key` based login.
 
     * Generate SSH Key on local Machine.
-      * `$ ssh-keygen -t rsa -b 4096 -C your_email@example.com`
+
+        ```bash
+        ssh-keygen -t rsa -b 4096 -C <your_email@example.com>
+        ```
+
     * Note the filename and file location used (I used the default that was created at ***.ssh/id_rsa***).
     * When prompted, create passphrase for ssh key (I created passphrase: **`grader`** for this instance).
 11. Copy public key from local machine to virtual machine.
 
     * Make new directory after login to the grader.
-      * `$ sudo mkdir .ssh`
+
+        ```bash
+        sudo mkdir .ssh
+        ```
+
     * Create file **authorized_keys** in **.shh** directory.
-      * `$ sudo touch .ssh/authorized_keys`
+
+        ```bash
+        sudo touch .ssh/authorized_keys
+        ```
+
     * Edit **authorized_keys**.
-      * `$ sudo nano .ssh/authorized_keys`
+
+        ```bash
+        sudo nano .ssh/authorized_keys
+        ```
+
     * Copy public key from local machine (**.ssh/id_rsa.pub**) and paste into **.ssh/authorized_keys** file on virtual machine.
-12. Set file permissions. 📜
+12. 📜 Set file permissions
 
-    * `$ sudo chmod 700 .ssh`
-    * `$ sudo chmod 644 .ssh/authorized_keys`
-13. Set Owner/Group to user **grader**. :octocat:
+    ```bash
+    sudo chmod 700 .ssh
+    sudo chmod 644 .ssh/authorized_keys
+    ```
 
-    * `$ sudo chown grader .ssh`
-    * `$ sudo chgrp grader .ssh`
-    * `$ sudo chown grader .ssh/authorized_keys`
-    * `$ sudo chgrp grader .ssh/authorized_keys`
+13. Set Owner/Group to user **grader**
+
+    ```bash
+    sudo chown grader .ssh
+    sudo chgrp grader .ssh
+    sudo chown grader .ssh/authorized_keys
+    sudo chgrp grader .ssh/authorized_keys
+    ```
+
 14. Restart SSH service.
 
-    * `$ sudo service ssh restart`
-15. Login command from Local Machine. 💻
+    ```bash
+    sudo service ssh restart
+    ```
 
-    * `$ ssh grader@<public-ip> -i .ssh/id_rsa`
-16. Forcing Key Based Authentication. 🔑
+15. 💻 Login command from Local Machine
 
-    * `$ sudo nano /etc/ssh/sshd_config`
-    * Change: ***PasswordAuthentication*** to ***no***.
-    * Type 'ctrl-o' to save.
-    * Type 'ctrl-x' to exit.
-17. Configure Firewall. 🔐
+    ```bash
+    ssh grader@<public-ip> -i .ssh/id_rsa
+    ```
 
+16. 🔑 Forcing Key Based Authentication
+
+    ```bash
+    sudo nano /etc/ssh/sshd_config
+    ```
+
+    * Change: `PasswordAuthentication` to `no`.
+    * `ctrl-o` to save.
+    * `ctrl-x` to exit.
+17. 🔐 Configure Firewall
     * Enter the following commands to configure defaults:
-      * `$ sudo ufw default deny incoming`
-      * `$ sudo ufw default allow outgoing`
+
+        ```bash
+        sudo ufw default deny incoming
+        sudo ufw default allow outgoing
+        ```
+
     * Enter the following to allow only specified ports:
-      * `$ sudo ufw allow ssh`
-      * `$ sudo ufw allow 2200/tcp`
-      * `$ sudo ufw allow 80/tcp`
-      * `$ sudo ufw allow 123/udp`
-      * `$ sudo ufw allow 443/tcp`
+
+      ```bash
+      sudo ufw allow ssh
+      sudo ufw allow 2200/tcp
+      sudo ufw allow 80/tcp
+      sudo ufw allow 123/udp
+      sudo ufw allow 443/tcp
+      ```
+
     * Enable Firewall and make sure port 22 is disabled:
-      * `sudo nano /etc/ssh/sshd_config`
-        to open editor and change port number from **22** to **2200**, set **PermitRootLogin** to **no**.
-      * `$ sudo ufw deny 22`
-      * `$ sudo ufw status`
-      * `$ sudo ufw enable`
-      * `$ sudo service ufw restart`
+
+        ```bash
+        sudo nano /etc/ssh/sshd_config
+        ```
+
+    * Open editor and change port number from `22` to `2200`, set `PermitRootLogin` to `no`.
+
+        ```bash
+        sudo ufw deny 22/tcp
+        sudo ufw enable
+        sudo ufw status
+        sudo service ufw restart    
+        ```
 
         **Note:** If using Amazon EC2, Amazon also applies a firewall, need to make sure the same ports are enabled in the Amazon console as well.
 18. So we can access the server locally by downloading the SSH key pairs provided inside AWS account and then run:
 
-    * `$ ssh ubuntu@<public-ip> -i .ssh/LightsailDefaultPrivateKey-eu-central-1.pem -p 2200`
-19. But now login as user **grader** locally run: 💻
+    ```bash
+    ssh ubuntu@<public-ip> -i <key.pem> -p 2200
+    ```
 
-    * `$ ssh grader@<public-ip> -i .ssh/id_rsa -p 2200`
+19. 💻 But now login as user **grader** locally run
+
+    ```bash
+    ssh grader@<public-ip> -i .ssh/id_rsa -p 2200    
+    ```
+
 20. Configure Linux timezone to UTC. 🕓
 
     * Open linux time zone configuration:
-      * `$ sudo dpkg-reconfigure tzdata`
-    * Navigate to and Select ***None of the above***
-    * Navigate to and Select ***UTC***
-21. Install apache2, wsgi, postgresql, git, python and other dependencies: 🔃 📦
 
-    * `$ sudo apt-get install git`
-    * `$ sudo apt-get install python-pip`
-    * `$ sudo apt-get install apache2`
-    * `$ sudo apt-get install libapache2-mod-wsgi-py3`
-    * `$ sudo apt-get install postgresql`
-    * `$ sudo pip install --upgrade pip`
-    * `$ sudo pip install flask`
-    * `$ sudo pip install SQLAlchemy`
-    * `$ sudo pip install oauth2client`
-    * `$ sudo pip install passlib`
-    * `$ sudo pip install requests`
-    * `$ sudo pip install psycopg2`
-22. Clone [Build-an-item-catalog-application](https://github.com/FixEight/udacity-buid-an-item-catalog-application) repository. 🌀
-
-    * Change the directory.
-      * `$ cd /var/www`
-    * Inside that directory run:
-      * `$ sudo git clone https://github.com/FixEight/udacity-buid-an-item-catalog-application.git catalog`
-    * Get inside the clone repository.
-      * `$ cd /var/www/catalog`
-23. Create new **project.wsgi** file inside the downloaded repository which will serve my flask application.
-
-    * `$ sudo touch /var/www/catalog/project.wsgi`
-    * Edit the file and add the follwing contents:
-      * `$ sudo nano /var/www/catalog/project.wsgi`
-      * Content:
-
-        ```text
-        import sys
-        sys.path.insert(0, "/var/www/catalog")
-
-        from project import app as application
+        ```bash
+        sudo dpkg-reconfigure tzdata   
         ```
 
-        **"from project"** phrase is actually the name of my main python file.
+    * Navigate to and Select `None of the above`
+    * Navigate to and Select `UTC`
+21. 📦 Install packages and other dependencies
+
+    ```bash
+    sudo apt-get install git
+    sudo apt-get install python-pip
+    sudo apt-get install apache2
+    sudo apt-get install libapache2-mod-wsgi-py3
+    sudo apt-get install postgresql
+    sudo pip install --upgrade pip
+    sudo pip install flask
+    sudo pip install SQLAlchemy
+    sudo pip install oauth2client
+    sudo pip install passlib
+    sudo pip install requests
+    sudo pip install psycopg2    
+    ```
+
+22. 🌀 Clone [Build-an-item-catalog-application](https://github.com/FixEight/udacity-buid-an-item-catalog-application) repository
+
+    * Change the directory.
+
+        ```bash
+        cd /var/www
+        ```
+
+    * Inside that directory run:
+
+        ```bash
+        sudo git clone https://github.com/FixEight/udacity-buid-an-item-catalog-application.git catalog    
+        ```
+
+    * Get inside the clone repository.
+
+        ```bash
+        cd /var/www/catalog    
+        ```
+
+23. Create new **project.wsgi** file inside the downloaded repository which will serve my flask application.
+
+    ```bash
+    sudo touch /var/www/catalog/project.wsgi    
+    ```
+
+    Edit the file
+
+    ```bash
+    sudo nano /var/www/catalog/project.wsgi    
+    ```
+
+    Add the follwing content
+
+    ```text
+    import sys
+    sys.path.insert(0, "/var/www/catalog")
+
+    from project import app as application
+    ```
+
+    **"from project"** phrase is actually the name of my main python file.
 24. We need to configure Apache to handle requests using the WSGI module. 📌
 
     * Creating new configuration file for **HTTP**.
 
-      * `$ sudo touch /etc/apache2/sites-available/catalog.conf`
-    * Open the editor and add the following content.
+        ```bash
+        sudo touch /etc/apache2/sites-available/catalog.conf
+        ```
 
-      * `$ sudo nano /etc/apache2/sites-available/catalog.conf`
-      * Content:
+        Open the editor
+
+        ```bash
+        sudo nano /etc/apache2/sites-available/catalog.conf    
+        ```
+
+        Add the following content:
 
         ```text
         <VirtualHost *:80>
@@ -178,11 +282,17 @@ This repository is ideal for **students, developers, and system administrators**
 
     * Creating new configuration file **HTTPS**.
 
-      * `$ sudo touch /etc/apache2/sites-available/catalog-ssl.conf`
-    * Open the editor and add the following content.
+        ```bash
+        sudo touch /etc/apache2/sites-available/catalog-ssl.conf
+        ```
 
-      * `$ sudo nano /etc/apache2/sites-available/catalog-ssl.conf`
-      * Content:
+        Open the editor
+
+        ```bash
+        sudo nano /etc/apache2/sites-available/catalog-ssl.conf    
+        ```
+
+        Add the following content
 
         ```text
         <IfModule mod_ssl.c>
@@ -210,8 +320,11 @@ This repository is ideal for **students, developers, and system administrators**
 
     * **Optional:** Redirect HTTP to HTTPS.
 
-      * `$ sudo nano /etc/apache2/sites-available/catalog.conf`
-      * Content:
+        ```bash
+        sudo nano /etc/apache2/sites-available/catalog.conf    
+        ```
+
+        Content
 
         ```text
         <VirtualHost *:80>
@@ -220,52 +333,68 @@ This repository is ideal for **students, developers, and system administrators**
         </VirtualHost>
         ```
 
-25. Now, disable the default Apache site, enable your flask app. ✅ ❎
+25. ✅ ❎ Now, disable the default Apache site, enable your flask app
 
     * Disable the default configuration file:
-      * `$ sudo a2dissite 000-default.conf`
+
+        ```bash
+        sudo a2dissite 000-default.conf    
+        ```
+
     * Enable the **catalog.conf** (Our flask app configuration):
-      * `$ sudo a2ensite catalog.conf`
+
+        ```bash
+        sudo a2ensite catalog.conf    
+        ```
+
     * Enable the **catalog-ssl.conf** (Our flask app configuration):
-      * `$ sudo a2enmod ssl`
-      * `$ sudo a2ensite catalog-ssl.conf`
+
+        ```bash
+        sudo a2enmod ssl
+        sudo a2ensite catalog-ssl.conf    
+        ```
+
     * To active the new configuration we need to run:
-      * `$ sudo service apache2 restart`
-      * `$ sudo apache2ctl restart`
-      * `$ sudo systemctl reload apache2`
-26. If app was cloned from (**[https://github.com/FixEight/udacity-buid-an-item-catalog-application](https://github.com/FixEight/udacity-buid-an-item-catalog-application)**) then all the following (Line numbers: 27, 28, 29) modification are made already in the repository.
-27. Modify **app.secret_key** location Move **app.secret_key** so that it becomes available to the app in the new wsgi configuration.
 
-    * Edit the project.py file and move the app.secret_key out of ...
+        ```bash
+        sudo service apache2 restart
+        sudo apache2ctl restart
+        sudo systemctl reload apache2
+        ```
 
-      ```text
-      if __name__ == '__main__':
-          app.secret_key = 'super_secret_key'
-          app.run()
-      ```
+26. If app was cloned from (**[https://github.com/FixEight/udacity-buid-an-item-catalog-application](https://github.com/FixEight/udacity-buid-an-item-catalog-application)**) then all the following modification are required.
+    * Modify **app.secret_key** location Move **app.secret_key** so that it becomes available to the app in the new wsgi configuration.
 
-      -- by moving it to the following line:
+        * Edit the project.py file and move the app.secret_key out of ...
 
-      ```text
-      app = Flask(__name__)
-      app.secret_key = 'super_secret_key'
-      ```
+            ```text
+            if __name__ == '__main__':
+                app.secret_key = 'super_secret_key'
+                app.run()
+            ```
 
-28. Also change the **client_secrets.json** directory in project.py according to the linux server.
+            -- by moving it to the following line:
 
-    ```text
-    CLIENT_ID = json.loads(
-        open('client_secrets.json', 'r').read())['web']['client_id']
-    ```
+            ```text
+            app = Flask(__name__)
+            app.secret_key = 'super_secret_key'
+            ```
 
-    -- to this form:
+    * Also change the **client_secrets.json** directory in project.py according to the linux server.
 
-    ```text
-    CLIENT_ID = json.loads(
-        open('/var/www/catalog/client_secrets.json', 'r').read())['web']['client_id']
-    ```
+        ```text
+        CLIENT_ID = json.loads(
+            open('client_secrets.json', 'r').read())['web']['client_id']
+        ```
 
-29. Edit project.py, database_setup.py in clone repository to use postgresql database instead of sqlite.
+        -- to this form:
+
+        ```text
+        CLIENT_ID = json.loads(
+            open('/var/www/catalog/client_secrets.json', 'r').read())['web']['client_id']
+        ```
+
+27. Edit project.py, database_setup.py in clone repository to use postgresql database instead of sqlite.
 
     ```text
     # engine = create_engine('sqlite:///catalog.db')
@@ -273,49 +402,57 @@ This repository is ideal for **students, developers, and system administrators**
         'postgresql+psycopg2://catalog:catalog@localhost/catalog')
     ```
 
-30. Install and Configure PostgreSQL database. 📂
+28. 📂 Install and Configure PostgreSQL database
 
-    * Create database user 'catalog'
-      * `$ sudo -u postgres psql postgres`
-      * `postgres=# CREATE DATABASE catalog;`
-      * `postgres=# CREATE USER catalog;`
-      * `postgres=# ALTER ROLE catalog with PASSWORD 'catalog';`
-      * `postgres=# GRANT ALL PRIVILEGES ON DATABASE catalog TO catalog;`
-      * `postgres=# \q`
-31. To view last few lines of server side error: ❌
+    * Create database user `catalog`
 
-    * `$ sudo tail -n 30 /var/log/apache2/catalog_error.log`
-    * `$ sudo tail /var/log/apache2/error.log`
+        ```bash
+        sudo -u postgres psql postgres    
+        ```
 
-## Run the Project: 🚀
+        ```sql
+        CREATE DATABASE catalog;
+        CREATE USER catalog;
+        ALTER ROLE catalog with PASSWORD 'catalog';
+        GRANT ALL PRIVILEGES ON DATABASE catalog TO catalog;
+        \q
+        ```
+
+29. ❌ To view last few lines of server side error
+
+    ```bash
+    sudo tail -n 30 /var/log/apache2/catalog_error.log
+    sudo tail /var/log/apache2/error.log    
+    ```
+
+## 🚀 Run the Project
 
 These are the following addresses to run the Website on browser.
 
-* [http://18.194.121.80.xip.io](http://18.194.121.80.xip.io)
-* [http://ec2-18-194-121-80.eu-central-1.compute.amazonaws.com](http://ec2-18-194-121-80.eu-central-1.compute.amazonaws.com)
+* [http://EC2 Public IP](http://EC2PublicIP)
 
-## Expected Output in Browser: 🐫
+## 🐫 Expected Output in Browser
 
 ![Buid an Item Catalog Application on Configured Linux Server](images/catalog.jpg)
 
-## Server Details
+## 🖥️ Server Details
 
-* IP Address: **18.194.121.80**
+* IP Address: **EC2 Public IP**
 * SSH Port Configured and Allowed in Firewall: **2200**
 * HTTP Port Configured and Allowed in Firewall: **80**
+* HTTPS Port Configured and Allowed in Firewall: **443**
 * NTP Port Configured and Allowed in Firewall: **123**
 
-## User Details
+## 👤 User Details
 
-* Sudoer User for Testing:
 * Username : **grader**
 * Password: **grader**
 * Private/public key as grader user is attached with it.
 
-## Third-Party Resources: 🔗
+## 📖 Resources
 
 * [https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps](https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps)
 
-## License
+## 📜 License
 
-Linux Server Configuration is Copyright ©️ 2018 Kashif Iqbal. It is free, and may be redistributed under the terms specified in the [LICENSE](https://choosealicense.com/licenses/mit/#) file.
+Linux Server Configuration is Copyright ©️ 2025 Kashif Iqbal. It is free, and may be redistributed under the terms specified in the [LICENSE](https://choosealicense.com/licenses/mit/#) file.
