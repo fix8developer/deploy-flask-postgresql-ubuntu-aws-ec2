@@ -31,23 +31,14 @@ sudo apt-get update
 sudo apt-get upgrade
 ```
 
-### Step 3: Install package **finger**. 📦
-
----
-
-```bash
-sudo apt-get install finger
-```
-
-### Step 4: Restart the Server
+### Step 3: Restart the Server
 
 ---
 
 ```bash
 sudo reboot
 ```
-
-### Step 5: Create new User **grader** (I created password: **grader**)
+### Step 4: Create new User **grader**
 
 ---
 
@@ -55,7 +46,7 @@ sudo reboot
 sudo adduser grader
 ```
 
-#### Step 5.1: Set **sudo** permissons for the new user (**grader**)
+#### Step 4.1: Set **sudo** permissons for the new user (**grader**)
 
 Create file in given directory with name (grader)
 
@@ -68,7 +59,7 @@ sudo nano /etc/sudoers.d/grader
 * `ctrl-o` to save.
 * `ctrl-x` to exit.
 
-### Step 6: Now login to user **grader**
+### Step 5: Now login to user **grader**
 
 ---
 
@@ -76,7 +67,7 @@ sudo nano /etc/sudoers.d/grader
 sudo su grader
 ```
 
-### Step 7: Setup `ssh-key` based login
+### Step 6: Setup `ssh-key` based login
 
 ---
 
@@ -87,19 +78,21 @@ sudo su grader
     ```
 
 * Note the filename and file location used (I used the default that was created at ***.ssh/id_rsa***).
-* When prompted, create passphrase for ssh key (I created passphrase: **`grader`** for this instance).
+* When prompted, create a secure passphrase for your SSH key (do not share or document your passphrase).
 
-### Step 8: Copy public key from local machine to virtual machine
+### Step 7: Copy public key from local machine to virtual machine
 
 ---
 
 * Make new directory after login to the grader.
 
+* When prompted, create a secure passphrase for your SSH key (do not share or document your passphrase).
+
     ```bash
     sudo mkdir .ssh
     ```
 
-* Create file **authorized_keys** in **.shh** directory.
+* Create file **authorized_keys** in **.ssh** directory.
 
     ```bash
     sudo touch .ssh/authorized_keys
@@ -113,7 +106,7 @@ sudo su grader
 
 * Copy public key from local machine (**.ssh/id_rsa.pub**) and paste into **.ssh/authorized_keys** file on virtual machine.
 
-### Step 9: 📜 Set file permissions
+### Step 8: 📜 Set file permissions
 
 ---
 
@@ -122,7 +115,7 @@ sudo chmod 700 .ssh
 sudo chmod 644 .ssh/authorized_keys
 ```
 
-### Step 10: Set Owner/Group to user **grader**
+### Step 9: Set Owner/Group to user **grader**
 
 ---
 
@@ -133,7 +126,7 @@ sudo chown grader .ssh/authorized_keys
 sudo chgrp grader .ssh/authorized_keys
 ```
 
-### Step 11: Restart SSH service
+### Step 10: Restart SSH service
 
 ---
 
@@ -141,7 +134,7 @@ sudo chgrp grader .ssh/authorized_keys
 sudo service ssh restart
 ```
 
-### Step 12: 💻 Login command from Local Machine
+### Step 11: 💻 Login command from Local Machine
 
 ---
 
@@ -149,7 +142,7 @@ sudo service ssh restart
 ssh grader@<public-ip> -i .ssh/id_rsa
 ```
 
-### Step 13: 🔑 Forcing Key Based Authentication
+### Step 12: 🔑 Forcing Key Based Authentication
 
 ---
 
@@ -161,7 +154,7 @@ sudo nano /etc/ssh/sshd_config
 * `ctrl-o` to save.
 * `ctrl-x` to exit.
 
-### Step 14: 🔐 Configure Firewall
+### Step 13: 🔐 Configure Firewall
 
 ---
 
@@ -197,9 +190,9 @@ sudo nano /etc/ssh/sshd_config
     sudo service ufw restart    
     ```
 
-**Note:** If using Amazon EC2, Amazon also applies a firewall, need to make sure the same ports are enabled in the Amazon console as well.
+**Note:** If using Amazon EC2, you must configure both the AWS Security Groups (in the AWS console) and the server's UFW firewall to allow the same ports (e.g., 2200, 80, 443, 123) for proper connectivity.
 
-### Step 15: Access the Server Locally
+### Step 14: Access the Server Locally
 
 ---
 
@@ -209,13 +202,13 @@ So we can access the server locally by downloading the SSH key pairs provided in
 ssh ubuntu@<public-ip> -i <key.pem> -p 2200
 ```
 
-#### Step 15.1: 💻 But now login as user **grader** locally run
+#### Step 14.1: 💻 But now login as user **grader** locally run
 
 ```bash
 ssh grader@<public-ip> -i .ssh/id_rsa -p 2200    
 ```
 
-### Step 16: 🕓 Configure Linux timezone to UTC
+### Step 15: 🕓 Configure Linux timezone to UTC
 
 ---
 
@@ -228,26 +221,33 @@ ssh grader@<public-ip> -i .ssh/id_rsa -p 2200
 * Navigate to and Select `None of the above`
 * Navigate to and Select `UTC`
 
-### Step 17: 📦 Install packages and other dependencies
+### Step 16: 📦 Install packages and other dependencies
 
 ---
 
 ```bash
 sudo apt-get install git
-sudo apt-get install python-pip
+sudo apt-get install python3-pip
 sudo apt-get install apache2
 sudo apt-get install libapache2-mod-wsgi-py3
 sudo apt-get install postgresql
-sudo pip install --upgrade pip
-sudo pip install flask
-sudo pip install SQLAlchemy
-sudo pip install oauth2client
-sudo pip install passlib
-sudo pip install requests
-sudo pip install psycopg2    
 ```
 
-### Step 18: 🌀 Clone [Build-an-item-catalog-application](https://github.com/FixEight/udacity-buid-an-item-catalog-application) repository
+```python
+# (Recommended) Create and activate a Python virtual environment for your project:
+python3 -m venv <venv-name>
+source <venv-name>/bin/activate
+
+# Upgrade pip and install Python dependencies inside the virtual environment:
+pip install --upgrade pip
+pip install flask
+pip install SQLAlchemy
+pip install oauth2client
+pip install passlib
+pip install requests
+pip install psycopg2
+```
+### Step 17: 🌀 Clone [Build-an-item-catalog-application](https://github.com/FixEight/udacity-build-an-item-catalog-application) repository
 
 ---
 
@@ -269,7 +269,7 @@ sudo pip install psycopg2
     cd /var/www/catalog    
     ```
 
-### Step 19: Create **WSGI** file
+### Step 18: Create **WSGI** file
 
 ---
 
@@ -280,7 +280,7 @@ sudo touch /var/www/catalog/project.wsgi
 sudo nano /var/www/catalog/project.wsgi    
 ```
 
-Add the follwing content
+Add the following content
 
 ```python
 import sys
@@ -291,11 +291,11 @@ from project import app as application
 
 **"from project"** phrase is actually the name of my main python file.
 
-### Step 20: 📌 Configure Apache to handle requests using the WSGI module
+### Step 19: 📌 Configure Apache to handle requests using the WSGI module
 
 ---
 
-#### Step 20.1: Creating new configuration file for **HTTP**
+#### Step 19.1: Creating new configuration file for **HTTP**
 
 ```bash
 sudo touch /etc/apache2/sites-available/catalog.conf
@@ -322,7 +322,7 @@ sudo nano /etc/apache2/sites-available/catalog.conf
     </VirtualHost>
     ```
 
-#### Step 20.2: Creating new configuration file **HTTPS**
+#### Step 19.2: Creating new configuration file **HTTPS**
 
 ```bash
 sudo touch /etc/apache2/sites-available/catalog-ssl.conf
@@ -355,7 +355,7 @@ sudo nano /etc/apache2/sites-available/catalog-ssl.conf
     </IfModule>
     ```
 
-#### Step 20.3: **Optional:** Redirect HTTP to HTTPS
+#### Step 19.3: **Optional:** Redirect HTTP to HTTPS
 
 ```bash
 sudo nano /etc/apache2/sites-available/catalog.conf    
@@ -370,7 +370,7 @@ Content
 </VirtualHost>
 ```
 
-### Step 21: Disable the default Apache site, enable your flask app
+### Step 20: Disable the default Apache site, enable your flask app
 
 ---
 
@@ -399,9 +399,8 @@ Content
     sudo service apache2 restart
     sudo apache2ctl restart
     sudo systemctl reload apache2
-    ```
-
-### Step 22: If app was cloned from (**[https://github.com/FixEight/udacity-buid-an-item-catalog-application](https://github.com/FixEight/udacity-buid-an-item-catalog-application)**) then all the following modification are required
+```
+### Step 21: If app was cloned from (**[https://github.com/FixEight/udacity-build-an-item-catalog-application](https://github.com/FixEight/udacity-build-an-item-catalog-application)**) then all the following modification are required
 
 ---
 
@@ -422,7 +421,7 @@ Content
     app.secret_key = 'super_secret_key'
     ```
 
-* Also change the **client_secrets.json** directory in project.py according to the linux server.
+* Also update the path to **client_secrets.json** in `project.py` to use the absolute file path (e.g., `/var/www/catalog/client_secrets.json`), since the working directory on the server is different from your local machine.
 
     ```python
     CLIENT_ID = json.loads(
@@ -436,7 +435,7 @@ Content
         open('/var/www/catalog/client_secrets.json', 'r').read())['web']['client_id']
     ```
 
-### Step 23: PostgreSQL instead of SQLite
+### Step 22: PostgreSQL instead of SQLite
 
 ---
 
@@ -448,7 +447,7 @@ engine = create_engine(
     'postgresql+psycopg2://catalog:catalog@localhost/catalog')
 ```
 
-### Step 24: 📂 Install and Configure PostgreSQL database
+### Step 23: 📂 Install and Configure PostgreSQL database
 
 ---
 
@@ -466,7 +465,7 @@ engine = create_engine(
     \q
     ```
 
-### Step 25: ❌ To view last few lines of server side error
+### Step 24: ❌ To view last few lines of server side error
 
 ---
 
@@ -483,7 +482,7 @@ These are the following addresses to run the Website on browser.
 
 ## 🐫 Expected Output in Browser
 
-![Buid an Item Catalog Application on Configured Linux Server](images/catalog.jpg)
+![Build an Item Catalog Application on Configured Linux Server](images/catalog.jpg)
 
 ## 🖥️ Server Details
 
@@ -496,7 +495,7 @@ These are the following addresses to run the Website on browser.
 ## 👤 User Details
 
 * Username : **grader**
-* Password: **grader**
+* Set a strong password for the grader user during creation and do not share it publicly.
 * Private/public key as grader user is attached with it.
 
 ## 📖 Resources
