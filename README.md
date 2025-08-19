@@ -410,7 +410,7 @@ engine = create_engine(
     sudo -u postgres psql postgres    
     ```
 
-    ```postgresql
+    ```pgsql
     CREATE DATABASE catalog;
     CREATE USER catalog;
     ALTER ROLE catalog with PASSWORD 'catalog';
