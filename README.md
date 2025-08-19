@@ -17,10 +17,14 @@ This repository is ideal for **students, developers, and system administrators**
 
 ### Step 1: Create & Initiate the Instance
 
+---
+
 * [Create EC2 Account.](https://signin.aws.amazon.com/ "AWS EC2")
 * Create EC2 instance.
 
 ### Step 2: First Check for Updates of the Packages
+
+---
 
 ```bash
 sudo apt-get update
@@ -29,17 +33,23 @@ sudo apt-get upgrade
 
 ### Step 3: Install package **finger**. 📦
 
+---
+
 ```bash
 sudo apt-get install finger
 ```
 
 ### Step 4: Restart the Server
 
+---
+
 ```bash
 sudo reboot
 ```
 
 ### Step 5: Create new User **grader** (I created password: **grader**)
+
+---
 
 ```bash
 sudo adduser grader
@@ -60,11 +70,15 @@ sudo nano /etc/sudoers.d/grader
 
 ### Step 6: Now login to user **grader**
 
+---
+
 ```bash
 sudo su grader
 ```
 
 ### Step 7: Setup `ssh-key` based login
+
+---
 
 * Generate SSH Key on local Machine.
 
@@ -76,6 +90,8 @@ sudo su grader
 * When prompted, create passphrase for ssh key (I created passphrase: **`grader`** for this instance).
 
 ### Step 8: Copy public key from local machine to virtual machine
+
+---
 
 * Make new directory after login to the grader.
 
@@ -99,12 +115,16 @@ sudo su grader
 
 ### Step 9: 📜 Set file permissions
 
+---
+
 ```bash
 sudo chmod 700 .ssh
 sudo chmod 644 .ssh/authorized_keys
 ```
 
 ### Step 10: Set Owner/Group to user **grader**
+
+---
 
 ```bash
 sudo chown grader .ssh
@@ -115,17 +135,23 @@ sudo chgrp grader .ssh/authorized_keys
 
 ### Step 11: Restart SSH service
 
+---
+
 ```bash
 sudo service ssh restart
 ```
 
 ### Step 12: 💻 Login command from Local Machine
 
+---
+
 ```bash
 ssh grader@<public-ip> -i .ssh/id_rsa
 ```
 
 ### Step 13: 🔑 Forcing Key Based Authentication
+
+---
 
 ```bash
 sudo nano /etc/ssh/sshd_config
@@ -136,6 +162,8 @@ sudo nano /etc/ssh/sshd_config
 * `ctrl-x` to exit.
 
 ### Step 14: 🔐 Configure Firewall
+
+---
 
 * Enter the following commands to configure defaults:
 
@@ -173,6 +201,8 @@ sudo nano /etc/ssh/sshd_config
 
 ### Step 15: Access the Server Locally
 
+---
+
 So we can access the server locally by downloading the SSH key pairs provided inside AWS account and then run
 
 ```bash
@@ -187,6 +217,8 @@ ssh grader@<public-ip> -i .ssh/id_rsa -p 2200
 
 ### Step 16: 🕓 Configure Linux timezone to UTC
 
+---
+
 * Open linux time zone configuration:
 
     ```bash
@@ -197,6 +229,8 @@ ssh grader@<public-ip> -i .ssh/id_rsa -p 2200
 * Navigate to and Select `UTC`
 
 ### Step 17: 📦 Install packages and other dependencies
+
+---
 
 ```bash
 sudo apt-get install git
@@ -214,6 +248,8 @@ sudo pip install psycopg2
 ```
 
 ### Step 18: 🌀 Clone [Build-an-item-catalog-application](https://github.com/FixEight/udacity-buid-an-item-catalog-application) repository
+
+---
 
 * Change the directory.
 
@@ -235,6 +271,8 @@ sudo pip install psycopg2
 
 ### Step 19: Create **WSGI** file
 
+---
+
 Create new **project.wsgi** file inside the downloaded repository which will serve my flask application.
 
 ```bash
@@ -254,6 +292,8 @@ from project import app as application
 **"from project"** phrase is actually the name of my main python file.
 
 ### Step 20: 📌 Configure Apache to handle requests using the WSGI module
+
+---
 
 #### Step 20.1: Creating new configuration file for **HTTP**
 
@@ -332,6 +372,8 @@ Content
 
 ### Step 21: Disable the default Apache site, enable your flask app
 
+---
+
 * Disable the default configuration file:
 
     ```bash
@@ -360,6 +402,8 @@ Content
     ```
 
 ### Step 22: If app was cloned from (**[https://github.com/FixEight/udacity-buid-an-item-catalog-application](https://github.com/FixEight/udacity-buid-an-item-catalog-application)**) then all the following modification are required
+
+---
 
 * Modify **app.secret_key** location Move **app.secret_key** so that it becomes available to the app in the new wsgi configuration.
 
@@ -394,6 +438,8 @@ Content
 
 ### Step 23: PostgreSQL instead of SQLite
 
+---
+
 Edit project.py, database_setup.py in clone repository to use postgresql database instead of sqlite
 
 ```python
@@ -403,6 +449,8 @@ engine = create_engine(
 ```
 
 ### Step 24: 📂 Install and Configure PostgreSQL database
+
+---
 
 * Create database user `catalog`
 
@@ -419,6 +467,8 @@ engine = create_engine(
     ```
 
 ### Step 25: ❌ To view last few lines of server side error
+
+---
 
 ```bash
 sudo tail -n 30 /var/log/apache2/catalog_error.log
