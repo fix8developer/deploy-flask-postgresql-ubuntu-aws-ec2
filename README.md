@@ -175,6 +175,7 @@ This repository is ideal for **students, developers, and system administrators**
             CustomLog ${APACHE_LOG_DIR}/catalog_access.log combined
         </VirtualHost>
         ```
+
     * Creating new configuration file **HTTPS**.
 
       * `$ sudo touch /etc/apache2/sites-available/catalog-ssl.conf`
@@ -206,6 +207,7 @@ This repository is ideal for **students, developers, and system administrators**
         </VirtualHost>
         </IfModule>
         ```
+
     * **Optional:** Redirect HTTP to HTTPS.
 
       * `$ sudo nano /etc/apache2/sites-available/catalog.conf`
@@ -217,6 +219,7 @@ This repository is ideal for **students, developers, and system administrators**
             Redirect permanent / https://<public-ip/localhost>/
         </VirtualHost>
         ```
+
 25. Now, disable the default Apache site, enable your flask app. ✅ ❎
 
     * Disable the default configuration file:
@@ -247,6 +250,7 @@ This repository is ideal for **students, developers, and system administrators**
       app = Flask(__name__)
       app.secret_key = 'super_secret_key'
       ```
+
 28. Also change the **client_secrets.json** directory in project.py according to the linux server.
 
     ```text
@@ -260,6 +264,7 @@ This repository is ideal for **students, developers, and system administrators**
     CLIENT_ID = json.loads(
         open('/var/www/catalog/client_secrets.json', 'r').read())['web']['client_id']
     ```
+
 29. Edit project.py, database_setup.py in clone repository to use postgresql database instead of sqlite.
 
     ```text
@@ -267,6 +272,7 @@ This repository is ideal for **students, developers, and system administrators**
     engine = create_engine(
         'postgresql+psycopg2://catalog:catalog@localhost/catalog')
     ```
+
 30. Install and Configure PostgreSQL database. 📂
 
     * Create database user 'catalog'
