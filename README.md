@@ -132,13 +132,21 @@ sudo chgrp grader .ssh/authorized_keys
 sudo service ssh restart
 ```
 
-### Step 11: Login from Local Machine
+### Step 11: Access the Server Locally
 
 ---
 
-```bash
-ssh grader@<public-ip> -i .ssh/id_rsa
-```
+* So we can access the server locally by downloading the SSH key pairs provided inside AWS account
+
+    ```bash
+    ssh ubuntu@<public-ip> -i <key.pem> -p 2200
+    ```
+
+* But now login as user **"grader"** locally
+
+    ```bash
+    ssh grader@<public-ip> -i .ssh/id_rsa -p 2200    
+    ```
 
 ### Step 12: 🔑 Forcing Key Based Authentication
 
@@ -190,23 +198,7 @@ sudo nano /etc/ssh/sshd_config
 
 > **Note:** If using Amazon EC2, you must configure both the AWS Security Groups (in the AWS console) and the server's UFW firewall to allow the same ports (e.g., 2200, 80, 443, 123) for proper connectivity.
 
-### Step 14: Access the Server Locally
-
----
-
-* So we can access the server locally by downloading the SSH key pairs provided inside AWS account and then run
-
-    ```bash
-    ssh ubuntu@<public-ip> -i <key.pem> -p 2200
-    ```
-
-* But now login as user **grader** locally run
-
-    ```bash
-    ssh grader@<public-ip> -i .ssh/id_rsa -p 2200    
-    ```
-
-### Step 15: 🕓 Configure Linux timezone to UTC
+### Step 14: 🕓 Configure Linux timezone to UTC
 
 ---
 
@@ -219,7 +211,7 @@ sudo nano /etc/ssh/sshd_config
 * Navigate to and Select `None of the above`
 * Navigate to and Select `UTC`
 
-### Step 16: 📦 Install packages and other dependencies
+### Step 15: 📦 Install packages and other dependencies
 
 ---
 
@@ -252,7 +244,7 @@ pip install psycopg2
 deactivate
 ```
 
-### Step 17: 🌀 Clone [Build-an-item-catalog-application](https://github.com/FixEight/udacity-build-an-item-catalog-application) repository
+### Step 16: 🌀 Clone [Build-an-item-catalog-application](https://github.com/FixEight/udacity-build-an-item-catalog-application) repository
 
 ---
 
@@ -274,7 +266,7 @@ deactivate
     cd /var/www/catalog    
     ```
 
-### Step 18: Create **WSGI** file
+### Step 17: Create **WSGI** file
 
 ---
 
@@ -296,11 +288,11 @@ deactivate
 
     > **"from project"** phrase is actually the name of my main python file.
 
-### Step 19: 📌 Configure Apache to handle requests using the WSGI module
+### Step 18: 📌 Configure Apache to handle requests using the WSGI module
 
 ---
 
-#### Step 19.1: Creating new configuration file for **HTTP**
+#### Step 18.1: Creating new configuration file for **HTTP**
 
 ```bash
 sudo touch /etc/apache2/sites-available/catalog.conf
@@ -327,7 +319,7 @@ sudo nano /etc/apache2/sites-available/catalog.conf
     </VirtualHost>
     ```
 
-#### Step 19.2: Creating new configuration file **HTTPS**
+#### Step 18.2: Creating new configuration file **HTTPS**
 
 ```bash
 sudo touch /etc/apache2/sites-available/catalog-ssl.conf
@@ -360,7 +352,7 @@ sudo nano /etc/apache2/sites-available/catalog-ssl.conf
     </IfModule>
     ```
 
-#### Step 19.3: **Optional:** Redirect HTTP to HTTPS
+#### Step 18.3: **Optional:** Redirect HTTP to HTTPS
 
 ```bash
 sudo nano /etc/apache2/sites-available/catalog.conf    
@@ -375,7 +367,7 @@ sudo nano /etc/apache2/sites-available/catalog.conf
     </VirtualHost>
     ```
 
-### Step 20: Disable the default Apache site, enable your flask app
+### Step 19: Disable the default Apache site, enable your flask app
 
 ---
 
@@ -406,7 +398,7 @@ sudo nano /etc/apache2/sites-available/catalog.conf
     sudo systemctl reload apache2
     ```
 
-### Step 21: If app was cloned from (**[https://github.com/FixEight/udacity-build-an-item-catalog-application](https://github.com/FixEight/udacity-build-an-item-catalog-application)**) then all the following modification are required
+### Step 20: If app was cloned from (**[https://github.com/FixEight/udacity-build-an-item-catalog-application](https://github.com/FixEight/udacity-build-an-item-catalog-application)**) then all the following modification are required
 
 ---
 
@@ -439,7 +431,7 @@ sudo nano /etc/apache2/sites-available/catalog.conf
         open('/var/www/catalog/client_secrets.json', 'r').read())['web']['client_id']
     ```
 
-### Step 22: PostgreSQL instead of SQLite
+### Step 21: PostgreSQL instead of SQLite
 
 ---
 
@@ -451,7 +443,7 @@ sudo nano /etc/apache2/sites-available/catalog.conf
         'postgresql+psycopg2://catalog:catalog@localhost/catalog')
     ```
 
-### Step 23: 📂 Install and Configure PostgreSQL database
+### Step 22: 📂 Install and Configure PostgreSQL database
 
 ---
 
@@ -469,7 +461,7 @@ sudo nano /etc/apache2/sites-available/catalog.conf
     \q
     ```
 
-### Step 24: ❌ To view last few lines of server side error
+### Step 23: ❌ To view last few lines of server side error
 
 ---
 
