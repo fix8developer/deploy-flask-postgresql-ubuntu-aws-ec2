@@ -398,7 +398,7 @@ sudo nano /etc/apache2/sites-available/catalog.conf
     sudo systemctl reload apache2
     ```
 
-### Step 20: If app was cloned from (**[https://github.com/FixEight/udacity-build-an-item-catalog-application](https://github.com/FixEight/udacity-build-an-item-catalog-application)**) then all the following modification are required
+### Step 20: If the application was cloned from [(build-an-item-catalog-application)](https://github.com/fix8developer/udacity-buid-an-item-catalog-application.git), the following modifications are required
 
 ---
 
@@ -417,7 +417,7 @@ sudo nano /etc/apache2/sites-available/catalog.conf
     app.secret_key = 'super_secret_key'
     ```
 
-* Also update the path to **client_secrets.json** in `project.py` to use the absolute file path (e.g., `/var/www/catalog/client_secrets.json`), since the working directory on the server is different from your local machine.
+* Also update the path to **client_secrets.json** in `project.py` to use the absolute file path (e.g., `/var/www/catalog/client_secrets.json`), since the working directory on the remote machine is different from your local machine.
 
     ```python
     CLIENT_ID = json.loads(
