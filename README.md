@@ -246,6 +246,13 @@ pip install requests
 pip install psycopg2
 ```
 
+> When you are finished working on your project, you can deactivate the virtual environment:
+
+```python
+deactivate
+```
+
+
 ### Step 17: 🌀 Clone [Build-an-item-catalog-application](https://github.com/FixEight/udacity-build-an-item-catalog-application) repository
 
 ---
