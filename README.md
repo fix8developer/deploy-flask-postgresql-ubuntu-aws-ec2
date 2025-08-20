@@ -208,8 +208,8 @@ sudo nano /etc/ssh/sshd_config
     sudo dpkg-reconfigure tzdata   
     ```
 
-* Navigate to and Select `None of the above`
-* Navigate to and Select `UTC`
+* Navigate and Select `None of the above`
+* Navigate and Select `UTC`
 
 ### Step 15: 📦 Install packages and other dependencies
 
