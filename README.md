@@ -38,6 +38,7 @@ sudo apt-get upgrade
 ```bash
 sudo reboot
 ```
+
 ### Step 4: Create new User **grader**
 
 ---
@@ -48,12 +49,12 @@ sudo adduser grader
 
 #### Step 4.1: Set **sudo** permissons for the new user (**grader**)
 
-Create file in given directory with name (grader)
+* Create file in given directory with name (grader)
 
-```bash
-sudo touch /etc/sudoers.d/grader
-sudo nano /etc/sudoers.d/grader
-```
+    ```bash
+    sudo touch /etc/sudoers.d/grader
+    sudo nano /etc/sudoers.d/grader
+    ```
 
 * Type: `grader ALL=(ALL) NOPASSWD:ALL`
 * `ctrl-o` to save.
@@ -77,16 +78,13 @@ sudo su grader
     ssh-keygen -t rsa -b 4096 -C <your_email@example.com>
     ```
 
-* Note the filename and file location used (I used the default that was created at ***.ssh/id_rsa***).
-* When prompted, create a secure passphrase for your SSH key (do not share or document your passphrase).
+    > Note the filename and file location used (I used the default that was created at ***.ssh/id_rsa***). When prompted, create a secure passphrase for your SSH key (do not share or document your passphrase).
 
 ### Step 7: Copy public key from local machine to virtual machine
 
 ---
 
 * Make new directory after login to the grader.
-
-* When prompted, create a secure passphrase for your SSH key (do not share or document your passphrase).
 
     ```bash
     sudo mkdir .ssh
@@ -190,23 +188,23 @@ sudo nano /etc/ssh/sshd_config
     sudo service ufw restart    
     ```
 
-**Note:** If using Amazon EC2, you must configure both the AWS Security Groups (in the AWS console) and the server's UFW firewall to allow the same ports (e.g., 2200, 80, 443, 123) for proper connectivity.
+> **Note:** If using Amazon EC2, you must configure both the AWS Security Groups (in the AWS console) and the server's UFW firewall to allow the same ports (e.g., 2200, 80, 443, 123) for proper connectivity.
 
 ### Step 14: Access the Server Locally
 
 ---
 
-So we can access the server locally by downloading the SSH key pairs provided inside AWS account and then run
+* So we can access the server locally by downloading the SSH key pairs provided inside AWS account and then run
 
-```bash
-ssh ubuntu@<public-ip> -i <key.pem> -p 2200
-```
+    ```bash
+    ssh ubuntu@<public-ip> -i <key.pem> -p 2200
+    ```
 
-#### Step 14.1: 💻 But now login as user **grader** locally run
+* But now login as user **grader** locally run
 
-```bash
-ssh grader@<public-ip> -i .ssh/id_rsa -p 2200    
-```
+    ```bash
+    ssh grader@<public-ip> -i .ssh/id_rsa -p 2200    
+    ```
 
 ### Step 15: 🕓 Configure Linux timezone to UTC
 
@@ -274,23 +272,23 @@ pip install psycopg2
 
 ---
 
-Create new **project.wsgi** file inside the downloaded repository which will serve my flask application.
+* Create new **project.wsgi** file inside the downloaded repository which will serve my flask application.
 
-```bash
-sudo touch /var/www/catalog/project.wsgi    
-sudo nano /var/www/catalog/project.wsgi    
-```
+    ```bash
+    sudo touch /var/www/catalog/project.wsgi    
+    sudo nano /var/www/catalog/project.wsgi    
+    ```
 
-Add the following content
+* Add the following content
 
-```python
-import sys
-sys.path.insert(0, "/var/www/catalog")
+    ```python
+    import sys
+    sys.path.insert(0, "/var/www/catalog")
 
-from project import app as application
-```
+    from project import app as application
+    ```
 
-**"from project"** phrase is actually the name of my main python file.
+    > **"from project"** phrase is actually the name of my main python file.
 
 ### Step 19: 📌 Configure Apache to handle requests using the WSGI module
 
@@ -362,14 +360,14 @@ sudo nano /etc/apache2/sites-available/catalog-ssl.conf
 sudo nano /etc/apache2/sites-available/catalog.conf    
 ```
 
-Content
+* Content
 
-```apache
-<VirtualHost *:80>
-    ServerName <public-ip/localhost>
-    Redirect permanent / https://<public-ip/localhost>/
-</VirtualHost>
-```
+    ```apache
+    <VirtualHost *:80>
+        ServerName <public-ip/localhost>
+        Redirect permanent / https://<public-ip/localhost>/
+    </VirtualHost>
+    ```
 
 ### Step 20: Disable the default Apache site, enable your flask app
 
@@ -406,8 +404,6 @@ Content
 
 ---
 
-* Modify **app.secret_key** location Move **app.secret_key** so that it becomes available to the app in the new wsgi configuration.
-
 * Edit the project.py file and move the app.secret_key out of ...
 
     ```python
@@ -441,13 +437,13 @@ Content
 
 ---
 
-Edit project.py, database_setup.py in clone repository to use postgresql database instead of sqlite
+* Edit project.py, database_setup.py in clone repository to use postgresql database instead of sqlite
 
-```python
-# engine = create_engine('sqlite:///catalog.db')
-engine = create_engine(
-    'postgresql+psycopg2://catalog:catalog@localhost/catalog')
-```
+    ```python
+    # engine = create_engine('sqlite:///catalog.db')
+    engine = create_engine(
+        'postgresql+psycopg2://catalog:catalog@localhost/catalog')
+    ```
 
 ### Step 23: 📂 Install and Configure PostgreSQL database
 
@@ -477,8 +473,6 @@ sudo tail /var/log/apache2/error.log
 ```
 
 ## 🚀 Run the Project
-
-These are the following addresses to run the Website on browser.
 
 * [http://EC2 Public IP](http://EC2PublicIP)
 
