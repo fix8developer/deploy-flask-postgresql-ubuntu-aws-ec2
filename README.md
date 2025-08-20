@@ -1,6 +1,6 @@
-# Linux Server Configuration
+# 🐧 Linux Server Configuration
 
-## ⚡ Project Overview
+## ⚡ Overview
 
 This project provides a **complete guide and configuration scripts** for setting up a  **secure Linux server on AWS EC2** . It walks through every step required to transform a fresh EC2 instance into a production-ready environment capable of hosting web applications.
 
@@ -13,16 +13,16 @@ The configuration covers:
 
 This repository is ideal for **students, developers, and system administrators** who want a ready-made reference for deploying Flask or other Python web apps on a  **hardened Linux environment with AWS EC2** .
 
-## 🔧 Setup the Project
+## 🛠 Project Setup
 
-### Step 1: Create & Initiate the Instance
+### 🖥 Step 1: Create & Initiate the Instance
 
 ---
 
 * [Create EC2 Account.](https://signin.aws.amazon.com/ "AWS EC2")
 * Create EC2 instance.
 
-### Step 2: First Check for Updates of the Packages
+### 📦 Step 2: First Update Packages
 
 ---
 
@@ -31,7 +31,7 @@ sudo apt-get update
 sudo apt-get upgrade
 ```
 
-### Step 3: Restart the Server
+### 🔄 Step 3: Restart the Server
 
 ---
 
@@ -39,7 +39,7 @@ sudo apt-get upgrade
 sudo reboot
 ```
 
-### Step 4: Create new User **"grader"**
+### 👤 Step 4: Add User **"grader"**
 
 ---
 
@@ -47,7 +47,7 @@ sudo reboot
 sudo adduser grader
 ```
 
-#### Step 4.1: Set **sudo** permissons for the new user **"grader"**
+#### Step 4.1: Set **sudo** Permissons For the New User **"grader"**
 
 * Create file in given directory with name **"grader"**
 
@@ -60,7 +60,7 @@ sudo adduser grader
 * `ctrl-o` to save.
 * `ctrl-x` to exit.
 
-### Step 5: Now login to user **"grader"**
+### 🔑 Step 5: Login as User **"grader"**
 
 ---
 
@@ -68,11 +68,11 @@ sudo adduser grader
 sudo su grader
 ```
 
-### Step 6: Setup `ssh-key` based login
+### 🗝 Step 6: Generate an **SSH Key**
 
 ---
 
-* Generate SSH Key on local Machine.
+* Generate an SSH Key on local Machine.
 
     ```bash
     ssh-keygen -t rsa -b 4096 -C <your_email@example.com>
@@ -80,7 +80,7 @@ sudo su grader
 
     > Note the filename and file location used (I used the default that was created at ***.ssh/id_rsa***). When prompted, create a secure passphrase for your SSH key (do not share or document your passphrase).
 
-### Step 7: Copy public key from local machine to remote machine
+### 📋 Step 7: Copy **Public Key**
 
 ---
 
@@ -104,7 +104,7 @@ sudo su grader
 
 > Copy public key from local machine (**.ssh/id_rsa.pub**) and paste into **.ssh/authorized_keys** file on remote machine.
 
-### Step 8: 📜 Set file permissions
+### 📝 Step 8: Set File Permissions
 
 ---
 
@@ -113,7 +113,7 @@ sudo chmod 700 .ssh
 sudo chmod 644 .ssh/authorized_keys
 ```
 
-### Step 9: Set Owner/Group to user **grader**
+### 👥 Step 9: Set **Owner** and **Group** to User "grader"
 
 ---
 
@@ -124,7 +124,7 @@ sudo chown grader .ssh/authorized_keys
 sudo chgrp grader .ssh/authorized_keys
 ```
 
-### Step 10: Restart SSH service
+### ♻️ Step 10: Restart **SSH** Service
 
 ---
 
@@ -132,7 +132,7 @@ sudo chgrp grader .ssh/authorized_keys
 sudo service ssh restart
 ```
 
-### Step 11: Access the Server Locally
+### 🌐 Step 11: Access the Server Locally
 
 ---
 
@@ -148,7 +148,7 @@ sudo service ssh restart
     ssh grader@<public-ip> -i .ssh/id_rsa -p 2200    
     ```
 
-### Step 12: 🔑 Forcing Key Based Authentication
+### 🚫 Step 12: Enforce Key-Based Authentication
 
 ---
 
@@ -160,7 +160,7 @@ sudo nano /etc/ssh/sshd_config
 * `ctrl-o` to save.
 * `ctrl-x` to exit.
 
-### Step 13: 🔐 Configure Firewall
+### 🔒 Step 13: Configure Firewall
 
 ---
 
@@ -198,7 +198,7 @@ sudo nano /etc/ssh/sshd_config
 
 > **Note:** If using Amazon EC2, you must configure both the AWS Security Groups (in the AWS console) and the server's UFW firewall to allow the same ports (e.g., 2200, 80, 443, 123) for proper connectivity.
 
-### Step 14: 🕓 Configure Linux timezone to UTC
+### 🕓 Step 14: Configure Linux Timezone to UTC
 
 ---
 
@@ -211,7 +211,7 @@ sudo nano /etc/ssh/sshd_config
 * Navigate and Select `None of the above`
 * Navigate and Select `UTC`
 
-### Step 15: 📦 Install packages and other dependencies
+### ⚙️ Step 15: Install Packages and Dependencies
 
 ---
 
@@ -244,7 +244,7 @@ pip install psycopg2
 deactivate
 ```
 
-### Step 16: 🌀 Clone [Build-an-item-catalog-application](https://github.com/fix8developer/udacity-buid-an-item-catalog-application.git) repository
+### 📂 Step 16: Clone the [Application](https://github.com/fix8developer/udacity-buid-an-item-catalog-application.git) Repository
 
 ---
 
@@ -266,7 +266,7 @@ deactivate
     cd /var/www/catalog    
     ```
 
-### Step 17: Create **WSGI** file
+### 🌀 Step 17: Create the **WSGI** File
 
 ---
 
@@ -288,11 +288,11 @@ deactivate
 
     > **"from project"** phrase is actually the name of my main python file.
 
-### Step 18: 📌 Configure Apache to handle requests using the WSGI module
+### 🏗 Step 18: Configure Apache
 
 ---
 
-#### Step 18.1: Creating new configuration file for **HTTP**
+#### 🌍 Step 18.1: Creating New **HTTP** Configuration File
 
 ```bash
 sudo touch /etc/apache2/sites-available/catalog.conf
@@ -319,7 +319,7 @@ sudo nano /etc/apache2/sites-available/catalog.conf
     </VirtualHost>
     ```
 
-#### Step 18.2: Creating new configuration file **HTTPS**
+#### 🔐 Step 18.2: Creating New **HTTPS** Configuration File
 
 ```bash
 sudo touch /etc/apache2/sites-available/catalog-ssl.conf
@@ -352,7 +352,7 @@ sudo nano /etc/apache2/sites-available/catalog-ssl.conf
     </IfModule>
     ```
 
-#### Step 18.3: **Optional:** Redirect HTTP to HTTPS
+#### ↪️ Step 18.3: Redirect HTTP to HTTPS **(Optional)**
 
 ```bash
 sudo nano /etc/apache2/sites-available/catalog.conf    
@@ -367,9 +367,11 @@ sudo nano /etc/apache2/sites-available/catalog.conf
     </VirtualHost>
     ```
 
-### Step 19: Disable the default Apache site, enable your flask app
+### ✅ Step 19: Enable the Application Site
 
 ---
+
+Disable the default Apache site and enable your flask app.
 
 * Disable the default configuration file:
 
@@ -398,9 +400,11 @@ sudo nano /etc/apache2/sites-available/catalog.conf
     sudo systemctl reload apache2
     ```
 
-### Step 20: If the application was cloned from [(build-an-item-catalog-application)](https://github.com/fix8developer/udacity-buid-an-item-catalog-application.git), the following modifications are required
+### ✏️ Step 20: Modify the Cloned Application
 
 ---
+
+If the application was cloned from [(build-an-item-catalog-application)](https://github.com/fix8developer/udacity-buid-an-item-catalog-application.git), the following modifications are required:
 
 * Edit the project.py file and move the app.secret_key out of ...
 
@@ -431,39 +435,41 @@ sudo nano /etc/apache2/sites-available/catalog.conf
         open('/var/www/catalog/client_secrets.json', 'r').read())['web']['client_id']
     ```
 
-### Step 21: PostgreSQL instead of SQLite
+### 🐘 Step 21: Use PostgreSQL Instead of SQLite
 
 ---
 
-* Edit project.py, database_setup.py in clone repository to use postgresql database instead of sqlite
+Edit project.py, database_setup.py in clone repository to use postgresql database instead of sqlite
 
-    ```python
-    # engine = create_engine('sqlite:///catalog.db')
-    engine = create_engine(
-        'postgresql+psycopg2://catalog:catalog@localhost/catalog')
-    ```
+```python
+# engine = create_engine('sqlite:///catalog.db')
+engine = create_engine(
+    'postgresql+psycopg2://catalog:catalog@localhost/catalog')
+```
 
-### Step 22: 📂 Install and Configure PostgreSQL database
+### 🗄 Step 22: Configure the Database
+
+---
+
+Create database user `"catalog"`
+
+```bash
+sudo -u postgres psql postgres    
+```
+
+```pgsql
+CREATE DATABASE catalog;
+CREATE USER catalog;
+ALTER ROLE catalog with PASSWORD 'catalog';
+GRANT ALL PRIVILEGES ON DATABASE catalog TO catalog;
+\q
+```
+
+### 📜 Step 23: Check Server Logs
 
 ---
 
-* Create database user `"catalog"`
-
-    ```bash
-    sudo -u postgres psql postgres    
-    ```
-
-    ```pgsql
-    CREATE DATABASE catalog;
-    CREATE USER catalog;
-    ALTER ROLE catalog with PASSWORD 'catalog';
-    GRANT ALL PRIVILEGES ON DATABASE catalog TO catalog;
-    \q
-    ```
-
-### Step 23: To view server side error
-
----
+To view server side error
 
 ```bash
 sudo tail -n 30 /var/log/apache2/catalog_error.log
@@ -475,7 +481,7 @@ sudo tail /var/log/apache2/error.log
 * [http://EC2 Public IP](http://EC2PublicIP)
 * [https://EC2 Public IP](https://EC2PublicIP)
 
-## 🐫 Expected Output in Browser
+## 🖼 Expected Output
 
 ![Build an Item Catalog Application on Configured Linux Server](images/catalog.jpg)
 
