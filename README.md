@@ -39,7 +39,7 @@ sudo apt-get upgrade
 sudo reboot
 ```
 
-### Step 4: Create new User **grader**
+### Step 4: Create new User **"grader"**
 
 ---
 
@@ -47,9 +47,9 @@ sudo reboot
 sudo adduser grader
 ```
 
-#### Step 4.1: Set **sudo** permissons for the new user (**grader**)
+#### Step 4.1: Set **sudo** permissons for the new user **"grader"**
 
-* Create file in given directory with name (grader)
+* Create file in given directory with name **"grader"**
 
     ```bash
     sudo touch /etc/sudoers.d/grader
@@ -60,7 +60,7 @@ sudo adduser grader
 * `ctrl-o` to save.
 * `ctrl-x` to exit.
 
-### Step 5: Now login to user **grader**
+### Step 5: Now login to user **"grader"**
 
 ---
 
