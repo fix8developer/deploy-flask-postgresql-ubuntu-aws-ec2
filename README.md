@@ -479,20 +479,6 @@ sudo tail /var/log/apache2/error.log
 
 ![Build an Item Catalog Application on Configured Linux Server](images/catalog.jpg)
 
-## 🖥️ Server Details
-
-* IP Address: **EC2 Public IP**
-* SSH Port Configured and Allowed in Firewall: **2200**
-* HTTP Port Configured and Allowed in Firewall: **80**
-* HTTPS Port Configured and Allowed in Firewall: **443**
-* NTP Port Configured and Allowed in Firewall: **123**
-
-## 👤 User Details
-
-* Username : **grader**
-* Set a strong password for the grader user during creation and do not share it publicly.
-* Private/public key as grader user is attached with it.
-
 ## 📖 Resources
 
 * [https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps](https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps)
