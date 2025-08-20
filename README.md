@@ -80,11 +80,11 @@ sudo su grader
 
     > Note the filename and file location used (I used the default that was created at ***.ssh/id_rsa***). When prompted, create a secure passphrase for your SSH key (do not share or document your passphrase).
 
-### Step 7: Copy public key from local machine to virtual machine
+### Step 7: Copy public key from local machine to remote machine
 
 ---
 
-* Make new directory after login to the grader.
+* Make new directory after login to the "grader".
 
     ```bash
     sudo mkdir .ssh
@@ -96,13 +96,13 @@ sudo su grader
     sudo touch .ssh/authorized_keys
     ```
 
-* Edit **authorized_keys**.
+* Edit **authorized_keys**
 
     ```bash
     sudo nano .ssh/authorized_keys
     ```
 
-* Copy public key from local machine (**.ssh/id_rsa.pub**) and paste into **.ssh/authorized_keys** file on virtual machine.
+> Copy public key from local machine (**.ssh/id_rsa.pub**) and paste into **.ssh/authorized_keys** file on remote machine.
 
 ### Step 8: 📜 Set file permissions
 
