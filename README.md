@@ -171,7 +171,7 @@ sudo nano /etc/ssh/sshd_config
     sudo ufw default allow outgoing
     ```
 
-* Enter the following to allow only specified ports:
+* Enter the following to allow/deny only specified ports:
 
     ```bash
     sudo ufw allow ssh
@@ -179,21 +179,21 @@ sudo nano /etc/ssh/sshd_config
     sudo ufw allow 80/tcp
     sudo ufw allow 123/udp
     sudo ufw allow 443/tcp
+    sudo ufw deny 22/tcp
     ```
 
-* Enable Firewall and make sure port 22 is disabled:
+* Before enable Firewall make sure port `22` is disabled:
 
     ```bash
-    sudo nano /etc/ssh/sshd_config
+    sudo nano /etc/ssh/sshd_config    
     ```
 
 * Open editor and change port number from `22` to `2200`, set `PermitRootLogin` to `no`.
 
     ```bash
-    sudo ufw deny 22/tcp
     sudo ufw enable
+    sudo service ufw restart
     sudo ufw status
-    sudo service ufw restart    
     ```
 
 > **Note:** If using Amazon EC2, you must configure both the AWS Security Groups (in the AWS console) and the server's UFW firewall to allow the same ports (e.g., 2200, 80, 443, 123) for proper connectivity.
