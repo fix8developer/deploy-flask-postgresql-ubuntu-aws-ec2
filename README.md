@@ -132,7 +132,7 @@ sudo chgrp grader .ssh/authorized_keys
 sudo service ssh restart
 ```
 
-### Step 11: 💻 Login command from Local Machine
+### Step 11: Login from Local Machine
 
 ---
 
