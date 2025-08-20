@@ -447,7 +447,7 @@ sudo nano /etc/apache2/sites-available/catalog.conf
 
 ---
 
-* Create database user `catalog`
+* Create database user `"catalog"`
 
     ```bash
     sudo -u postgres psql postgres    
@@ -461,7 +461,7 @@ sudo nano /etc/apache2/sites-available/catalog.conf
     \q
     ```
 
-### Step 23: ❌ To view last few lines of server side error
+### Step 23: To view server side error
 
 ---
 
@@ -473,6 +473,7 @@ sudo tail /var/log/apache2/error.log
 ## 🚀 Run the Project
 
 * [http://EC2 Public IP](http://EC2PublicIP)
+* [https://EC2 Public IP](https://EC2PublicIP)
 
 ## 🐫 Expected Output in Browser
 
