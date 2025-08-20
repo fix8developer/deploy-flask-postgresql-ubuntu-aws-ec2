@@ -244,7 +244,7 @@ pip install psycopg2
 deactivate
 ```
 
-### Step 16: 🌀 Clone [Build-an-item-catalog-application](https://github.com/FixEight/udacity-build-an-item-catalog-application) repository
+### Step 16: 🌀 Clone [Build-an-item-catalog-application](https://github.com/fix8developer/udacity-buid-an-item-catalog-application.git) repository
 
 ---
 
