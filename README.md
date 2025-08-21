@@ -59,7 +59,12 @@ sudo adduser grader
     sudo nano /etc/sudoers.d/grader
     ```
 
-* Type: `grader ALL=(ALL) NOPASSWD:ALL`
+* Type:
+  
+  ```bash
+  grader ALL=(ALL) NOPASSWD:ALL
+  ```
+
 * `ctrl-o` to save.
 * `ctrl-x` to exit.
 
