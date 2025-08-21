@@ -367,6 +367,51 @@ sudo nano /etc/apache2/sites-available/catalog.conf
     </VirtualHost>
     ```
 
+### Step 19: Create Your Own Self-Signed SSL Certificate
+
+---
+
+#### Step 19.1: Install `OpenSSL`
+
+```bash
+sudo apt update && sudo apt install -y openssl
+```
+
+#### Step 19.2: Create a Private Key
+
+```bash
+openssl genrsa -out selfsigned.key 2048
+```
+
+#### Step 19.3: Generate a Certificate Signing Request (CSR)
+
+```bash
+openssl req -new -key selfsigned.key -out selfsigned.csr
+```
+
+> Common Name should be your domain (or public IP if no domain).
+
+#### Step 19.4: Generate a Self-Signed SSL Certificate
+
+```bash
+openssl x509 -req -days 365 -in selfsigned.csr -signkey selfsigned.key -out selfsigned.crt
+```
+
+> This creates `selfsigned.crt` (certificate) valid for 1 year.
+
+#### Step 19.5: Move SSL Files to Secure Location
+
+```bash
+sudo mv selfsigned.crt /etc/ssl/certs/
+sudo mv selfsigned.key /etc/ssl/private/
+```
+
+Set proper permissions:
+
+```bash
+sudo chmod 600 /etc/ssl/private/selfsigned.key
+```
+
 ### ✅ Step 19: Enable the Application Site
 
 ---
@@ -379,13 +424,14 @@ Disable the default Apache site and enable your flask app.
     sudo a2dissite 000-default.conf    
     ```
 
-* Enable the **catalog.conf** (Our flask app configuration):
+* Enable the **catalog.conf** (Flask app configuration for **HTTP**):
 
     ```bash
-    sudo a2ensite catalog.conf    
+    sudo a2ensite catalog.conf
+    sudo a2enmod wsgi
     ```
 
-* Enable the **catalog-ssl.conf** (Our flask app configuration):
+* Enable the **catalog-ssl.conf** (Flask app configuration for **HTTPS**):
 
     ```bash
     sudo a2enmod ssl
@@ -396,9 +442,6 @@ Disable the default Apache site and enable your flask app.
 
     ```bash
     sudo systemctl reload apache2
-    sudo systemctl restart apache2
-    sudo apache2ctl restart
-    sudo service apache2 restart
     ```
 
 ### ✏️ Step 20: Modify the Cloned Application
