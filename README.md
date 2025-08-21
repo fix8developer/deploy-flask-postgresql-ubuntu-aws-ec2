@@ -273,8 +273,11 @@ deactivate
 * Create new **project.wsgi** file inside the downloaded repository which will serve my flask application.
 
     ```bash
-    sudo touch /var/www/catalog/project.wsgi    
-    sudo nano /var/www/catalog/project.wsgi    
+    sudo touch /var/www/catalog/project.wsgi
+    ```
+
+    ```bash
+    sudo nano /var/www/catalog/project.wsgi   
     ```
 
 * Add the following content
@@ -296,6 +299,9 @@ deactivate
 
 ```bash
 sudo touch /etc/apache2/sites-available/catalog.conf
+```
+
+```bash
 sudo nano /etc/apache2/sites-available/catalog.conf    
 ```
 
@@ -323,6 +329,9 @@ sudo nano /etc/apache2/sites-available/catalog.conf
 
 ```bash
 sudo touch /etc/apache2/sites-available/catalog-ssl.conf
+```
+
+```bash
 sudo nano /etc/apache2/sites-available/catalog-ssl.conf    
 ```
 
