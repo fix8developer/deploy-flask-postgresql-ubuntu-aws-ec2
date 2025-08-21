@@ -395,9 +395,10 @@ Disable the default Apache site and enable your flask app.
 * To active the new configuration we need to run:
 
     ```bash
-    sudo service apache2 restart
-    sudo apache2ctl restart
     sudo systemctl reload apache2
+    sudo systemctl restart apache2
+    sudo apache2ctl restart
+    sudo service apache2 restart
     ```
 
 ### ✏️ Step 20: Modify the Cloned Application
