@@ -53,6 +53,9 @@ sudo adduser grader
 
     ```bash
     sudo touch /etc/sudoers.d/grader
+    ```
+
+    ```bash
     sudo nano /etc/sudoers.d/grader
     ```
 
@@ -257,7 +260,7 @@ deactivate
 * Inside that directory run:
 
     ```bash
-    sudo git clone https://github.com/FixEight/udacity-buid-an-item-catalog-application.git catalog    
+    sudo git clone https://github.com/fix8developer/udacity-buid-an-item-catalog-application.git catalog    
     ```
 
 * Get inside the clone repository.
@@ -376,7 +379,7 @@ sudo nano /etc/apache2/sites-available/catalog.conf
     </VirtualHost>
     ```
 
-### Step 19: Create Your Own Self-Signed SSL Certificate
+### 🔐 Step 19: Create Your Own Self-Signed SSL Certificate
 
 ---
 
