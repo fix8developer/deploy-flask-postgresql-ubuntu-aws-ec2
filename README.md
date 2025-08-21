@@ -412,11 +412,11 @@ openssl x509 -req -days 365 -in selfsigned.csr -signkey selfsigned.key -out self
 
 > This creates `selfsigned.crt` (certificate) valid for 1 year.
 
-#### Step 19.5: Move SSL Files to Secure Location
+#### Step 19.5: Copy SSL Files to Secure Location
 
 ```bash
-sudo mv selfsigned.crt /etc/ssl/certs/
-sudo mv selfsigned.key /etc/ssl/private/
+sudo cp selfsigned.crt /etc/ssl/certs/
+sudo cp selfsigned.key /etc/ssl/private/
 ```
 
 Set proper permissions:
@@ -526,10 +526,21 @@ GRANT ALL PRIVILEGES ON DATABASE catalog TO catalog;
 
 ---
 
-To view server side error
+To view server side error for **HTTP**:
 
 ```bash
 sudo tail -n 30 /var/log/apache2/catalog_error.log
+```
+
+To view server side error for **HTTPS**:
+
+```bash
+sudo tail -n 30 /var/log/apache2/catalog_ssl_error.log
+```
+
+To view server side error for **ALL**:
+
+```bash
 sudo tail /var/log/apache2/error.log    
 ```
 
