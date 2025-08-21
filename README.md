@@ -374,7 +374,8 @@ sudo nano /etc/apache2/sites-available/catalog.conf
 #### Step 19.1: Install `OpenSSL`
 
 ```bash
-sudo apt update && sudo apt install -y openssl
+sudo apt-get update
+sudo apt-get install -y openssl
 ```
 
 #### Step 19.2: Create a Private Key
@@ -412,7 +413,7 @@ Set proper permissions:
 sudo chmod 600 /etc/ssl/private/selfsigned.key
 ```
 
-### ✅ Step 19: Enable the Application Site
+### ✅ Step 20: Enable the Application Site
 
 ---
 
@@ -444,7 +445,7 @@ Disable the default Apache site and enable your flask app.
     sudo systemctl reload apache2
     ```
 
-### ✏️ Step 20: Modify the Cloned Application
+### ✏️ Step 21: Modify the Cloned Application
 
 ---
 
@@ -479,7 +480,7 @@ If the application was cloned from [(build-an-item-catalog-application)](https:/
         open('/var/www/catalog/client_secrets.json', 'r').read())['web']['client_id']
     ```
 
-### 🐘 Step 21: Use PostgreSQL Instead of SQLite
+### 🐘 Step 22: Use PostgreSQL Instead of SQLite
 
 ---
 
@@ -491,7 +492,7 @@ engine = create_engine(
     'postgresql+psycopg2://catalog:catalog@localhost/catalog')
 ```
 
-### 🗄 Step 22: Configure the Database
+### 🗄 Step 23: Configure the Database
 
 ---
 
@@ -509,7 +510,7 @@ GRANT ALL PRIVILEGES ON DATABASE catalog TO catalog;
 \q
 ```
 
-### 📜 Step 23: Check Server Logs
+### 📜 Step 24: Check Server Logs
 
 ---
 
