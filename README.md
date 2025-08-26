@@ -1,4 +1,4 @@
-# 🐧 Linux Server Configuration
+# 🐧 How to Deploy a Flask (Python) Application with PostgreSQL on an Ubuntu VPS (AWS-EC2)
 
 ## ⚡ Overview
 
