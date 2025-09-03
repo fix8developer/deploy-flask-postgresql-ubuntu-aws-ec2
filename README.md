@@ -78,7 +78,7 @@ sudo su <user-name>
 ---
 
 ```bash
-# Generate an SSH Key on local Machine.
+# Generate an SSH Key on local Machine
 ssh-keygen -t rsa -b 4096 -C <your_email@example.com>
 ```
 
@@ -89,10 +89,10 @@ ssh-keygen -t rsa -b 4096 -C <your_email@example.com>
 ---
 
 ```bash
-# Make new directory after login to the "new user".
+# Make new directory after login to the "new user"
 sudo mkdir .ssh
 
-# Create file "authorized_keys" in ".ssh" directory.
+# Create file "authorized_keys" in ".ssh" directory
 sudo touch .ssh/authorized_keys
 
 # Edit "authorized_keys"
