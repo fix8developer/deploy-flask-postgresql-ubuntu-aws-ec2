@@ -39,73 +39,65 @@ sudo apt-get upgrade
 sudo reboot
 ```
 
-### 👤 Step 4: Add User **"grader"**
+### 👤 Step 4: Add New User
 
 ---
 
 ```bash
-sudo adduser grader
+sudo adduser <user-name>
 ```
 
-#### Step 4.1: Set **sudo** Permissons For the New User **"grader"**
+#### Step 4.1: Set **sudo** Permissons For the New User
 
-* Create file in given directory with name **"grader"**
-
-  ```bash
-  sudo touch /etc/sudoers.d/grader
-  ```
+* Create file in given directory with **user name** you created
 
   ```bash
-  sudo nano /etc/sudoers.d/grader
+  sudo touch /etc/sudoers.d/<user-name>
+  sudo nano /etc/sudoers.d/<user-name>
   ```
+
 * Type:
 
   ```bash
-  grader ALL=(ALL) NOPASSWD:ALL
+  <user-name> ALL=(ALL) NOPASSWD:ALL
   ```
-* `ctrl-o` to save.
-* `ctrl-x` to exit.
 
-### 🔑 Step 5: Login as User **"grader"**
+  * `ctrl-o` to save.
+  * `ctrl-x` to exit.
+
+### 🔑 Step 5: Login as New User
 
 ---
 
 ```bash
-sudo su grader
+sudo su <user-name>
 ```
 
 ### 🗝 Step 6: Generate an **SSH Key**
 
 ---
 
-* Generate an SSH Key on local Machine.
+```bash
+# Generate an SSH Key on local Machine.
+ssh-keygen -t rsa -b 4096 -C <your_email@example.com>
+```
 
-  ```bash
-  ssh-keygen -t rsa -b 4096 -C <your_email@example.com>
-  ```
-
-  > Note the filename and file location used (I used the default that was created at ***.ssh/id_rsa***). When prompted, create a secure passphrase for your SSH key (do not share or document your passphrase).
-  >
+> Note the filename and file location used (I used the default that was created at ***.ssh/id_rsa***). When prompted, create a secure passphrase for your SSH key (do not share or document your passphrase).
 
 ### 📋 Step 7: Copy **Public Key**
 
 ---
 
-* Make new directory after login to the "grader".
+```bash
+# Make new directory after login to the "new user".
+sudo mkdir .ssh
 
-  ```bash
-  sudo mkdir .ssh
-  ```
-* Create file **authorized_keys** in **.ssh** directory.
+# Create file "authorized_keys" in ".ssh" directory.
+sudo touch .ssh/authorized_keys
 
-  ```bash
-  sudo touch .ssh/authorized_keys
-  ```
-* Edit **authorized_keys**
-
-  ```bash
-  sudo nano .ssh/authorized_keys
-  ```
+# Edit "authorized_keys"
+sudo nano .ssh/authorized_keys
+```
 
 > Copy public key from local machine (**.ssh/id_rsa.pub**) and paste into **.ssh/authorized_keys** file on remote machine.
 
@@ -118,15 +110,12 @@ sudo chmod 700 .ssh
 sudo chmod 644 .ssh/authorized_keys
 ```
 
-### 👥 Step 9: Set **Owner** and **Group** to User "grader"
+### 👥 Step 9: Set **Owner** and **Group** to New User
 
 ---
 
 ```bash
-sudo chown grader .ssh
-sudo chgrp grader .ssh
-sudo chown grader .ssh/authorized_keys
-sudo chgrp grader .ssh/authorized_keys
+sudo chown -R <user-name>:<user-name> .ssh
 ```
 
 ### ♻️ Step 10: Restart **SSH** Service
@@ -141,15 +130,16 @@ sudo service ssh restart
 
 ---
 
-* So we can access the server locally by downloading the SSH key pairs provided inside AWS account
+* So we can access default user **"ubuntu"** of server locally by downloading the SSH key pairs provided inside AWS EC2 account
 
   ```bash
-  ssh ubuntu@<public-ip> -i <key.pem> -p 2200
+  ssh ubuntu@<public-ip> -i <downloaded-aws-ec2-key.pem> -p 22
   ```
-* But now login as user **"grader"** locally
+
+* But now login as **new user** locally
 
   ```bash
-  ssh grader@<public-ip> -i .ssh/id_rsa -p 2200  
+  ssh <user-name>@<public-ip> -i <generated-private-key-on-local-machine> -p 22  
   ```
 
 ### 🚫 Step 12: Enforce Key-Based Authentication
@@ -161,8 +151,8 @@ sudo nano /etc/ssh/sshd_config
 ```
 
 * Change: `PasswordAuthentication` to `no`.
-* `ctrl-o` to save.
-* `ctrl-x` to exit.
+  * `ctrl-o` to save.
+  * `ctrl-x` to exit.
 
 ### 🔒 Step 13: Configure Firewall
 
@@ -174,6 +164,7 @@ sudo nano /etc/ssh/sshd_config
   sudo ufw default deny incoming
   sudo ufw default allow outgoing
   ```
+
 * Enter the following to allow/deny only specified ports:
 
   ```bash
@@ -184,11 +175,13 @@ sudo nano /etc/ssh/sshd_config
   sudo ufw allow 443/tcp
   sudo ufw deny 22/tcp
   ```
+
 * Before enable Firewall make sure port `22` is disabled:
 
   ```bash
   sudo nano /etc/ssh/sshd_config  
   ```
+
 * Open editor and change port number from `22` to `2200`, set `PermitRootLogin` to `no`.
 
   ```bash
@@ -208,8 +201,9 @@ sudo nano /etc/ssh/sshd_config
   ```bash
   sudo dpkg-reconfigure tzdata   
   ```
-* Navigate and Select `None of the above`
-* Navigate and Select `UTC`
+
+  * Navigate and Select `None of the above`
+  * Navigate and Select `UTC`
 
 ### ⚙️ Step 15: Install Packages and Dependencies
 
@@ -253,11 +247,13 @@ deactivate
   ```bash
   cd /var/www
   ```
+
 * Inside that directory run:
 
   ```bash
   sudo git clone https://github.com/fix8developer/udacity-buid-an-item-catalog-application.git catalog  
   ```
+
 * Get inside the clone repository.
 
   ```bash
@@ -277,6 +273,7 @@ deactivate
   ```bash
   sudo nano /var/www/catalog/project.wsgi   
   ```
+
 * Add the following content
 
   ```python
@@ -287,7 +284,6 @@ deactivate
   ```
 
   > **"from project"** phrase is actually the name of my main python file.
-  >
 
 ### 🏗 Step 18: Configure Apache
 
@@ -431,18 +427,21 @@ Disable the default Apache site and enable your flask app.
   ```bash
   sudo a2dissite 000-default.conf  
   ```
+
 * Enable the **catalog.conf** (Flask app configuration for **HTTP**):
 
   ```bash
   sudo a2ensite catalog.conf
   sudo a2enmod wsgi
   ```
+
 * Enable the **catalog-ssl.conf** (Flask app configuration for **HTTPS**):
 
   ```bash
   sudo a2enmod ssl
   sudo a2ensite catalog-ssl.conf  
   ```
+
 * To active the new configuration we need to run:
 
   ```bash
@@ -469,6 +468,7 @@ If the application was cloned from [(build-an-item-catalog-application)](https:/
   app = Flask(__name__)
   app.secret_key = 'super_secret_key'
   ```
+
 * Also update the path to **client_secrets.json** in `project.py` to use the absolute file path (e.g., `/var/www/catalog/client_secrets.json`), since the working directory on the remote machine is different from your local machine.
 
   ```python
