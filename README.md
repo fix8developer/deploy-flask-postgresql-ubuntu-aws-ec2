@@ -15,29 +15,43 @@ This repository is ideal for **students, developers, and system administrators**
 
 ## 🛠 Project Setup
 
-### 🖥 Step 1: Create & Initiate the Instance
+### 🖥 Step 1: Create, Initiate & Connect to the Instance
 
 ---
 
 * [Create EC2 Account.](https://signin.aws.amazon.com/ "AWS EC2")
 * Create EC2 instance.
+* Connect to the instance through the **AWS EC2 console**, or access the default user `ubuntu` locally by using the SSH key (**.pem**) downloaded from your AWS EC2 account.
+
+  ```bash
+  ssh ubuntu@<public-ip> -i <downloaded-aws-ec2-key.pem> -p 22
+  ```
 
 ### 📦 Step 2: First Update Packages
 
 ---
 
 ```bash
-sudo apt-get update
-sudo apt-get upgrade
+sudo apt update
+sudo apt full-upgrade -y 
+sudo apt autoremove -y 
 ```
 
-### 🔄 Step 3: Restart the Server
+⚡ Breakdown:
+
+* `apt update` → refresh package index
+* `apt full-upgrade -y` → upgrade all packages with dependency handling
+* `apt autoremove -y` → remove unneeded packages
+
+### 🔄 Step 3: Restart the Remote Machine Server (EC2)
 
 ---
 
 ```bash
 sudo reboot
 ```
+
+* `reboot` → restart the system to apply updates (like kernel upgrades)
 
 ### 👤 Step 4: Add New User
 
@@ -49,21 +63,20 @@ sudo adduser <user-name>
 
 #### Step 4.1: Set **sudo** Permissons For the New User
 
-* Create file in given directory with **user name** you created
+1. Create a file in the given directory with the **user name**. You can create and edit the file in one go with `nano`:
 
-  ```bash
-  sudo touch /etc/sudoers.d/<user-name>
-  sudo nano /etc/sudoers.d/<user-name>
-  ```
+    ```bash
+    sudo nano /etc/sudoers.d/<user-name>
+    ```
 
-* Type:
+2. Type:
 
-  ```bash
-  <user-name> ALL=(ALL) NOPASSWD:ALL
-  ```
+    ```bash
+    <user-name> ALL=(ALL) NOPASSWD:ALL
+    ```
 
-  * `ctrl-o` to save.
-  * `ctrl-x` to exit.
+    * `ctrl-o` to save.
+    * `ctrl-x` to exit.
 
 ### 🔑 Step 5: Login as New User
 
@@ -77,37 +90,37 @@ sudo su <user-name>
 
 ---
 
-```bash
-# Generate an SSH Key on local Machine
-ssh-keygen -t rsa -b 4096 -C <your_email@example.com>
-```
+* Generate an SSH Key on local Machine
+
+  ```bash
+  ssh-keygen -t rsa -b 4096 -C <your_email@example.com>
+  ```
 
 > Note the filename and file location used (I used the default that was created at ***.ssh/id_rsa***). When prompted, create a secure passphrase for your SSH key (do not share or document your passphrase).
 
-### 📋 Step 7: Copy **Public Key**
+### 📋 Step 7: Copy **Public Key** to Remote Machine Server
 
 ---
 
 ```bash
-# Make new directory after login to the "new user"
-sudo mkdir .ssh
-
-# Create file "authorized_keys" in ".ssh" directory
-sudo touch .ssh/authorized_keys
-
-# Edit "authorized_keys"
-sudo nano .ssh/authorized_keys
+mkdir -p ~/.ssh
+nano ~/.ssh/authorized_keys
 ```
 
-> Copy public key from local machine (**.ssh/id_rsa.pub**) and paste into **.ssh/authorized_keys** file on remote machine.
+⚡ Breakdown:
+
+* `mkdir -p ~/.ssh` → creates the .ssh directory if it doesn’t already exist (no need for sudo if you’re logged in as the new user).
+* `nano ~/.ssh/authorized_keys` → directly creates/edits the file.
+
+> Copy public key from local machine (**.ssh/id_rsa.pub**) and paste into **.ssh/authorized_keys** file on remote machine server.
 
 ### 📝 Step 8: Set File Permissions
 
 ---
 
 ```bash
-sudo chmod 700 .ssh
-sudo chmod 644 .ssh/authorized_keys
+chmod 700 ~/.ssh 
+chmod 600 ~/.ssh/authorized_keys
 ```
 
 ### 👥 Step 9: Set **Owner** and **Group** to New User
@@ -118,6 +131,16 @@ sudo chmod 644 .ssh/authorized_keys
 sudo chown -R <user-name>:<user-name> .ssh
 ```
 
+⚡ Breakdown:
+
+* `sudo` → run the command as superuser (root), needed if the current user doesn’t own the directory.
+* `chown` → change ownership of files or directories.
+* `-R` → recursive option, meaning apply the change to the directory (`.ssh`) and everything inside it.
+* `<user-name>:<user-name>` →
+  * first `<user-name>` = user who should own the files
+  * second `<user-name>` = group that should own the files (often same as username)
+* `.ssh` → the target directory (inside the current user’s home directory, typically `~/.ssh`).
+
 ### ♻️ Step 10: Restart **SSH** Service
 
 ---
@@ -126,17 +149,11 @@ sudo chown -R <user-name>:<user-name> .ssh
 sudo service ssh restart
 ```
 
-### 🌐 Step 11: Access the Server Locally
+### 🌐 Step 11: Access New User on Local Machine Terminal
 
 ---
 
-* So we can access default user **"ubuntu"** of server locally by downloading the SSH key pairs provided inside AWS EC2 account
-
-  ```bash
-  ssh ubuntu@<public-ip> -i <downloaded-aws-ec2-key.pem> -p 22
-  ```
-
-* But now login as **new user** locally
+* Login as **new user** on local machine terminal
 
   ```bash
   ssh <user-name>@<public-ip> -i <generated-private-key-on-local-machine> -p 22  
@@ -210,284 +227,116 @@ sudo nano /etc/ssh/sshd_config
 ---
 
 ```bash
-sudo apt-get install git
-sudo apt-get install python3-pip
-sudo apt-get install apache2
-sudo apt-get install libapache2-mod-wsgi-py3
-sudo apt-get install postgresql
+sudo apt install -y git
+sudo apt install -y python3-pip
+sudo apt install -y apache2
+sudo apt install -y libapache2-mod-wsgi-py3
+sudo apt install -y postgresql
+sudo apt install -y postgresql-contrib
 ```
 
-```python
-# (Recommended) Create and activate a Python virtual environment for your project:
-python3 -m venv <venv-name>
-source <venv-name>/bin/activate
-
-# Upgrade pip and install Python dependencies inside the virtual environment:
-pip install --upgrade pip
-pip install flask
-pip install SQLAlchemy
-pip install oauth2client
-pip install passlib
-pip install requests
-pip install psycopg2
-```
-
-> When you are finished working on your project, you can deactivate the virtual environment:
-
-```python
-deactivate
-```
-
-### 📂 Step 16: Clone the [Application](https://github.com/fix8developer/udacity-buid-an-item-catalog-application.git) Repository
+### 📂 Step 16: Clone the [Application](https://github.com/fix8developer/udacity-buid-an-item-catalog-application.git) Repository & Install Python dependencies
 
 ---
 
-* Change the directory.
+1. Change the directory.
 
-  ```bash
-  cd /var/www
-  ```
+    ```bash
+    cd /var/www
+    ```
 
-* Inside that directory run:
+2. Inside that directory run:
 
-  ```bash
-  sudo git clone https://github.com/fix8developer/udacity-buid-an-item-catalog-application.git catalog  
-  ```
+    ```bash
+    sudo git clone https://github.com/fix8developer/udacity-buid-an-item-catalog-application.git catalog 
+    ```
 
-* Get inside the clone repository.
+    * `catalog` is the **"project-name"**.
 
-  ```bash
-  cd /var/www/catalog  
-  ```
+3. Get inside the clone repository.
 
-### 🌀 Step 17: Create the **WSGI** File
+    ```bash
+    cd /var/www/catalog
+    ```
 
----
+4. Set **Owner** and **Group** to New User
 
-* Create new **project.wsgi** file inside the downloaded repository which will serve my flask application.
+    ```bash
+    sudo chown -R <user-name>:<user-name> /var/www/catalog
+    ```
 
-  ```bash
-  sudo touch /var/www/catalog/project.wsgi
-  ```
+5. Install Python dependencies
 
-  ```bash
-  sudo nano /var/www/catalog/project.wsgi   
-  ```
+    ```bash
+    # Navigate to the project directory
+    cd /var/www/catalog
 
-* Add the following content
+    # Create and activate a Python virtual environment [catalog-venv]
+    python3 -m venv catalog-venv
+    source catalog-venv/bin/activate
 
-  ```python
-  import sys
-  sys.path.insert(0, "/var/www/catalog")
+    # Upgrade pip and install required dependencies
+    pip install --upgrade pip
+    pip install flask SQLAlchemy oauth2client passlib requests psycopg2-binary
 
-  from project import app as application
-  ```
+    # Deactivate the virtual environment
+    deactivate
+    ```
 
-  > **"from project"** phrase is actually the name of my main python file.
+    **OPTIONAL**: Remove only pip-installed packages
 
-### 🏗 Step 18: Configure Apache
+    ```bash
+    # Only show your user-installed packages (doesn’t show system or venv)
+    pip3 list --user
 
----
+    # Remove user-installed packages
+    pip3 freeze --user | xargs pip3 uninstall -y
+    ```
 
-#### 🌍 Step 18.1: Creating New **HTTP** Configuration File
-
-```bash
-sudo touch /etc/apache2/sites-available/catalog.conf
-```
-
-```bash
-sudo nano /etc/apache2/sites-available/catalog.conf  
-```
-
-* Add the following content:
-
-  ```apache
-  <VirtualHost *:80>
-      ServerName <public-ip/localhost>
-      ServerAdmin kashifiqbal23@gmail.com
-
-      WSGIScriptAlias / /var/www/catalog/project.wsgi
-
-      <Directory /var/www/catalog>
-          Require all granted
-          WSGIApplicationGroup %{GLOBAL}
-          WSGIScriptReloading On
-      </Directory>
-
-      ErrorLog ${APACHE_LOG_DIR}/catalog_error.log
-      CustomLog ${APACHE_LOG_DIR}/catalog_access.log combined
-  </VirtualHost>
-  ```
-
-#### 🔐 Step 18.2: Creating New **HTTPS** Configuration File
-
-```bash
-sudo touch /etc/apache2/sites-available/catalog-ssl.conf
-```
-
-```bash
-sudo nano /etc/apache2/sites-available/catalog-ssl.conf  
-```
-
-* Add the following content
-
-  ```apache
-  <IfModule mod_ssl.c>
-  <VirtualHost *:443>
-      ServerName <public-ip/localhost>
-      ServerAdmin fix8developer@gmail.com
-
-      WSGIScriptAlias / /var/www/catalog/project.wsgi
-
-      <Directory /var/www/catalog>
-          Require all granted
-          WSGIApplicationGroup %{GLOBAL}
-          WSGIScriptReloading On
-      </Directory>
-
-      SSLEngine on
-      SSLCertificateFile /etc/ssl/certs/selfsigned.crt
-      SSLCertificateKeyFile /etc/ssl/private/selfsigned.key
-
-      ErrorLog ${APACHE_LOG_DIR}/catalog_ssl_error.log
-      CustomLog ${APACHE_LOG_DIR}/catalog_ssl_access.log combined
-  </VirtualHost>
-  </IfModule>
-  ```
-
-#### ↪️ Step 18.3: Redirect HTTP to HTTPS **(Optional)**
-
-```bash
-sudo nano /etc/apache2/sites-available/catalog.conf  
-```
-
-* Content
-
-  ```apache
-  <VirtualHost *:80>
-      ServerName <public-ip/localhost>
-      Redirect permanent / https://<public-ip/localhost>/
-  </VirtualHost>
-  ```
-
-### 🔐 Step 19: Create Your Own Self-Signed SSL Certificate
-
----
-
-#### Step 19.1: Install `OpenSSL`
-
-```bash
-sudo apt-get update
-sudo apt-get install -y openssl
-```
-
-#### Step 19.2: Create a Private Key
-
-```bash
-openssl genrsa -out selfsigned.key 2048
-```
-
-#### Step 19.3: Generate a Certificate Signing Request (CSR)
-
-```bash
-openssl req -new -key selfsigned.key -out selfsigned.csr
-```
-
-> Common Name should be your domain (or public IP if no domain).
-
-#### Step 19.4: Generate a Self-Signed SSL Certificate
-
-```bash
-openssl x509 -req -days 365 -in selfsigned.csr -signkey selfsigned.key -out selfsigned.crt
-```
-
-> This creates `selfsigned.crt` (certificate) valid for 1 year.
-
-#### Step 19.5: Copy SSL Files to Secure Location
-
-```bash
-sudo cp selfsigned.crt /etc/ssl/certs/
-sudo cp selfsigned.key /etc/ssl/private/
-```
-
-Set proper permissions:
-
-```bash
-sudo chmod 600 /etc/ssl/private/selfsigned.key
-```
-
-### ✅ Step 20: Enable the Application Site
-
----
-
-Disable the default Apache site and enable your flask app.
-
-* Disable the default configuration file:
-
-  ```bash
-  sudo a2dissite 000-default.conf  
-  ```
-
-* Enable the **catalog.conf** (Flask app configuration for **HTTP**):
-
-  ```bash
-  sudo a2ensite catalog.conf
-  sudo a2enmod wsgi
-  ```
-
-* Enable the **catalog-ssl.conf** (Flask app configuration for **HTTPS**):
-
-  ```bash
-  sudo a2enmod ssl
-  sudo a2ensite catalog-ssl.conf  
-  ```
-
-* To active the new configuration we need to run:
-
-  ```bash
-  sudo systemctl reload apache2
-  ```
-
-### ✏️ Step 21: Modify the Cloned Application
+### ✏️ Step 17: Modify the Cloned Application
 
 ---
 
 If the application was cloned from [(build-an-item-catalog-application)](https://github.com/fix8developer/udacity-buid-an-item-catalog-application.git), the following modifications are required:
 
-* Edit the project.py file and move the app.secret_key out of ...
+```bash
+nano /var/www/catalog/project.py
+```
 
-  ```python
-  if __name__ == '__main__':
-      app.secret_key = 'super_secret_key'
-      app.run()
-  ```
+1. Edit the project.py file and move the app.secret_key out of ...
 
-  -- by moving it to the following line:
+    ```python
+    if __name__ == '__main__':
+        app.secret_key = 'super_secret_key'
+        app.run()
+    ```
 
-  ```python
-  app = Flask(__name__)
-  app.secret_key = 'super_secret_key'
-  ```
+    -- by moving it to the following line:
 
-* Also update the path to **client_secrets.json** in `project.py` to use the absolute file path (e.g., `/var/www/catalog/client_secrets.json`), since the working directory on the remote machine is different from your local machine.
+    ```python
+    app = Flask(__name__)
+    app.secret_key = 'super_secret_key'
+    ```
 
-  ```python
-  CLIENT_ID = json.loads(
-      open('client_secrets.json', 'r').read())['web']['client_id']
-  ```
+2. Also update the path to **client_secrets.json** in `project.py` to use the absolute file path (e.g., `/var/www/catalog/client_secrets.json`), since the working directory on the remote machine is different from your local machine.
 
-  -- to this form:
+    ```python
+    CLIENT_ID = json.loads(
+        open('client_secrets.json', 'r').read())['web']['client_id']
+    ```
 
-  ```python
-  CLIENT_ID = json.loads(
-      open('/var/www/catalog/client_secrets.json', 'r').read())['web']['client_id']
-  ```
+    -- to this form:
 
-### 🐘 Step 22: Use PostgreSQL Instead of SQLite
+    ```python
+    CLIENT_ID = json.loads(
+        open('/var/www/catalog/client_secrets.json', 'r').read())['web']['client_id']
+    ```
+
+### 🐘 Step 18: Use PostgreSQL Instead of SQLite
 
 ---
 
-Edit project.py, database_setup.py in clone repository to use postgresql database instead of sqlite
+Edit `project.py` and `database_setup.py` in clone repository to use postgresql database instead of sqlite
 
 ```python
 # engine = create_engine('sqlite:///catalog.db')
@@ -495,25 +344,306 @@ engine = create_engine(
     'postgresql+psycopg2://catalog:catalog@localhost/catalog')
 ```
 
-### 🗄 Step 23: Configure the Database
+### 🗄 Step 19: Configure the Database
 
 ---
 
-Create database user `"catalog"`
+1. Connect to PostgreSQL as the Default Superuser
+
+    ```bash
+    sudo -u postgres psql postgres  
+    ```
+
+2. Create database user `"catalog"`
+
+    ```pgsql
+    CREATE DATABASE catalog;
+    CREATE USER catalog;
+    ALTER ROLE catalog with PASSWORD 'catalog';
+    GRANT ALL PRIVILEGES ON DATABASE catalog TO catalog;
+    \q
+    ```
+
+* Create Database Tables and Populate with Sample Data
+
+  ```bash
+  # Navigate to the project directory
+  cd /var/www/catalog
+
+  # Activate the Python virtual environment
+  source catalog-venv/bin/activate
+
+  # Run script to create database tables
+  python3 database_setup.py
+
+  # Populate the database with sample dat
+  python3 lotsofitems.py
+
+  # Exit the virtual environment
+  deactivate
+  ```
+
+### 🌀 Step 20: Create The **WSGI** File (`catalog` Is My Project-Name)
+
+---
+
+1. Create new **project-name.wsgi** file inside the downloaded repository which will serve my flask application.
+
+    ```bash
+    sudo nano /var/www/catalog/catalog.wsgi
+    ```
+  
+    You can **create** and **edit** the file in one go with `nano`.
+
+2. Add the following content:
+
+    ```python
+    import sys
+    import logging
+
+    logging.basicConfig(stream=sys.stderr)
+
+    # Add your project directory to sys.path
+    sys.path.insert(0, "/var/www/catalog")
+
+    # Import your Flask app
+    from project import app as application
+    ```
+
+    The phrase `from project` refers to the name of **main Python file**, which in my case is `project.py`.
+
+### 🏗 Step 21: Free DNS Providers
+
+---
+
+DuckDNS gives you a free subdomain (`something.duckdns.org`).
+
+Steps:
+
+1. Go to `DuckDNS.org`
+2. Sign in (GitHub, Google, etc.)
+3. Create a subdomain → e.g., `pythonflask.duckdns.org`
+
+### 🏗 Step 22: Configure Apache
+
+---
+
+#### 🌍 Step 22.1: Setting Up a New **HTTP** Configuration File for **TESTING**
+
+* Create and open the Apache configuration file
+
+  ```bash
+  sudo nano /etc/apache2/sites-available/catalog.conf
+  ```
+
+* Add the following content:
+
+  ```apache
+  <VirtualHost *:80>
+      ServerName pythonflask.duckdns.org
+      ServerAlias www.pythonflask.duckdns.org
+      ServerAdmin email@address.com
+
+      WSGIDaemonProcess catalog_http python-home=/var/www/catalog/catalog-venv python-path=/var/www/catalog
+      WSGIProcessGroup catalog_http
+      WSGIScriptAlias / /var/www/catalog/catalog.wsgi
+
+      <Directory /var/www/catalog>
+          Options -Indexes +FollowSymLinks
+          AllowOverride None
+          Require all granted
+          WSGIApplicationGroup %{GLOBAL}
+      </Directory>
+
+      ErrorLog ${APACHE_LOG_DIR}/catalog_error.log
+      CustomLog ${APACHE_LOG_DIR}/catalog_access.log combined
+  </VirtualHost>
+  ```
+
+  * `ctrl-o` to save.
+  * `ctrl-x` to exit.
+
+  ⚡Breakdown:
+
+  * `Options -Indexes +FollowSymLinks` # Security (no directory listing, allow symlinks)
+  * `AllowOverride None` # Ignores .htaccess (faster, safer)
+  * `Require all granted` # Lets Apache serve your app
+  * `WSGIApplicationGroup %{GLOBAL}` # Keeps Python isolated and stable
+
+* ✅ Check configuration syntax errors
+
+  ```bash
+  sudo apache2ctl configtest
+  ```
+
+#### 🔐 Step 22.2: Setting Up the existing **HTTP** Configuration File for **PUBLISHING**
+
+* Open the existing Apache configuration file
+
+  ```bash
+  sudo nano /etc/apache2/sites-available/catalog.conf
+  ```
+
+* Add the following content:
+
+  ```apache
+  <VirtualHost *:80>
+      ServerName pythonflask.duckdns.org
+      ServerAlias www.pythonflask.duckdns.org
+      Redirect permanent / https://pythonflask.duckdns.org/
+
+      ServerAdmin email@address.com
+
+      WSGIDaemonProcess catalog_http python-home=/var/www/catalog/catalog-venv python-path=/var/www/catalog
+      WSGIProcessGroup catalog_http
+      WSGIScriptAlias / /var/www/catalog/catalog.wsgi
+
+      <Directory /var/www/catalog>
+          Options -Indexes +FollowSymLinks
+          AllowOverride None
+          Require all granted
+          WSGIApplicationGroup %{GLOBAL}
+      </Directory>
+
+      ErrorLog ${APACHE_LOG_DIR}/catalog_error.log
+      CustomLog ${APACHE_LOG_DIR}/catalog_access.log combined
+  </VirtualHost>
+  ```
+
+  * `ctrl-o` to save.
+  * `ctrl-x` to exit.
+
+* ✅ Check configuration syntax errors
+
+  ```bash
+  sudo apache2ctl configtest
+  ```
+
+#### Step 22.3: Setting Up new **HTTPS** Configuration File for **PUBLISHING**
 
 ```bash
-sudo -u postgres psql postgres  
+sudo nano /etc/apache2/sites-available/catalog-le-ssl.conf
 ```
 
-```pgsql
-CREATE DATABASE catalog;
-CREATE USER catalog;
-ALTER ROLE catalog with PASSWORD 'catalog';
-GRANT ALL PRIVILEGES ON DATABASE catalog TO catalog;
-\q
-```
+* Add the following content
 
-### 📜 Step 24: Check Server Logs
+  ```apache
+  <VirtualHost *:443>
+      ServerName pythonflask.duckdns.org
+      ServerAlias www.pythonflask.duckdns.org
+      ServerAdmin email@address.com
+
+      WSGIDaemonProcess catalog_https python-home=/var/www/catalog/catalog-venv python-path=/var/www/catalog
+      WSGIProcessGroup catalog_https
+      WSGIScriptAlias / /var/www/catalog/catalog.wsgi
+
+      <Directory /var/www/catalog>
+          Options -Indexes +FollowSymLinks
+          AllowOverride None
+          Require all granted
+          WSGIApplicationGroup %{GLOBAL}
+      </Directory>
+
+      SSLEngine on
+      Include /etc/letsencrypt/options-ssl-apache.conf
+
+      ErrorLog ${APACHE_LOG_DIR}/catalog_ssl_error.log
+      CustomLog ${APACHE_LOG_DIR}/catalog_ssl_access.log combined
+
+      SSLCertificateFile /etc/letsencrypt/live/pythonflask.duckdns.org/fullchain.pem
+      SSLCertificateKeyFile /etc/letsencrypt/live/pythonflask.duckdns.org/privkey.pem
+  </VirtualHost>
+  ```
+
+  * `ctrl-o` to save.
+  * `ctrl-x` to exit.
+
+* ✅ Check configuration syntax errors
+
+  ```bash
+  sudo apache2ctl configtest
+  ```
+
+### ✅ Step 23: Enable the Application Site
+
+---
+
+Disable the default Apache site and enable your flask app.
+
+1. Disable the default configuration file:
+
+    ```bash
+    sudo a2dissite 000-default.conf  
+    ```
+
+2. Enable the **catalog.conf** (Flask app configuration for **HTTP**):
+
+    ```bash
+    sudo a2enmod wsgi
+    sudo a2ensite catalog.conf
+    ```
+
+3. Enable the **catalog-ssl.conf** (Flask app configuration for **HTTPS**):
+
+    ```bash
+    sudo a2enmod ssl
+    sudo a2ensite catalog-le-ssl.conf 
+    ```
+
+4. To active the new configuration we need to run:
+
+    ```bash
+    sudo systemctl reload apache2
+    ```
+
+5. Double-check Apache's current status
+
+    ```bash
+    sudo systemctl status apache2
+    ```
+
+### Step 24: Secure Your Application with HTTPS (SSL Certificate)
+
+---
+
+#### Step 1: Install Certbot
+
+* Install Certbot to easily obtain and manage SSL certificates.
+
+  ```bash
+  sudo apt update
+  sudo apt install certbot python3-certbot-apache -y
+  ```
+
+#### Step 2: Obtain SSL Certificate
+
+* Run Certbot with the Apache plugin:
+
+  ```bash
+  # sudo certbot --apache -d your_domain.com -d www.your_domain.com
+  sudo certbot --apache -d pythonflask.duckdns.org -d www.pythonflask.duckdns.org
+  ```
+
+  * Follow prompts:
+    * Enter email (for renewal notices)
+    * Agree to terms
+    * Certbot will auto-configure Apache for HTTPS
+
+#### Step 3: Automatic renewal
+
+* Configure Certbot to automatically renew your SSL certificates. Let’s Encrypt certificates are valid for 90 days. Certbot can auto-renew:
+
+  ```bash
+  sudo systemctl status certbot.timer
+  ```
+
+* Or test renewal manually:
+
+  ```bash
+  sudo certbot renew --dry-run
+  ```
+
+### 📜 Step 25: Check Server Logs
 
 ---
 
@@ -539,6 +669,7 @@ sudo tail /var/log/apache2/error.log
 
 * [http://EC2 Public IP](http://EC2PublicIP)
 * [https://EC2 Public IP](https://EC2PublicIP)
+* [https://pythonflask.duckdns.org](https://pythonflask.duckdns.org)
 
 ## 🖼 Expected Output
 
